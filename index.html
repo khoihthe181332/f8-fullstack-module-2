@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đen - Spotify</title>
+    <title>F8 - Spotify</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="css/reset.css" />
@@ -118,7 +118,7 @@
                     </div>
                     <div class="user-menu">
                         <button class="user-avatar" id="userAvatar">
-                            <img src="placeholder.svg?height=32&width=32" alt="User Avatar" />
+                            <img id="user-avatar" src="placeholder.svg?height=32&width=32" alt="User Avatar" />
                         </button>
                         <div class="user-dropdown" id="userDropdown">
                             <div class="dropdown-item" id="logoutBtn">
@@ -468,7 +468,7 @@
                     </h1>
 
                     <form class="auth-form-content">
-                        <div class="form-group invalid">
+                        <div class="form-group" id="form-signup-email">
                             <input type="email" placeholder="Email address" class="form-input" id="signupEmail" />
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>
@@ -477,7 +477,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="form-signup-password">
                             <input type="password" placeholder="Password" class="form-input" id="signupPassword" />
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>
@@ -504,7 +504,7 @@
                     <h1 class="modal-heading">Log in to Spotify</h1>
 
                     <form class="auth-form-content">
-                        <div class="form-group invalid">
+                        <div class="form-group " id="form-login-email">
                             <input type="email" placeholder="Email address" class="form-input" id="loginEmail" />
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>
@@ -513,7 +513,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="form-login-password">
                             <input type="password" placeholder="Password" class="form-input" id="loginPassword" />
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>

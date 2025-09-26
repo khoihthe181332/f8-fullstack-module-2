@@ -85,7 +85,7 @@
 
     .main-header {
         padding: var(--spacing-md);
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
         gap: var(--spacing-md);
     }
 

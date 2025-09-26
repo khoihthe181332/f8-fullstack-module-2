@@ -656,6 +656,7 @@
     overflow: hidden;
     cursor: pointer;
     transition: transform var(--transition-fast);
+    display: none;
 }
 
 .user-avatar:hover {
@@ -666,6 +667,10 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.user-avatar.show {
+    display: block;
 }
 
 /* Add button */

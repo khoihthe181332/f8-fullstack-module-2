@@ -1,3 +1,8 @@
+import httpRequest from "./utils/httpRequest.js";
+
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", function () {
     // Get DOM elements
@@ -9,6 +14,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
     const showLoginBtn = document.getElementById("showLogin");
     const showSignupBtn = document.getElementById("showSignup");
+
+    const formSignUpEmail = $("#form-signup-email");
+    const formSignUpPassword = $("#form-signup-password");
+
+    const formLoginEmail = $("#form-login-email");
+    const formLoginPassword = $("#form-login-password");
 
     // Function to show signup form
     function showSignupForm() {
@@ -72,6 +83,88 @@ document.addEventListener("DOMContentLoaded", function () {
     showSignupBtn.addEventListener("click", function () {
         showSignupForm();
     });
+
+    // Register form
+    signupForm.querySelector(".auth-form-content").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = $("#signupEmail").value.trim();
+        const password = $("#signupPassword").value.trim();
+
+        // Xử lý lỗi người dùng nhập
+        if (!email) {
+            formSignUpEmail.classList.add("invalid");
+        } else {
+            formSignUpEmail.classList.remove("invalid");
+        }
+
+        const credentials = {
+            email,
+            password,
+        }
+
+        try {
+            const { user, access_token } = await httpRequest.post("/auth/register", credentials);
+            localStorage.setItem("accessToken", access_token);
+            localStorage.setItem("currentUser", user);
+            authModal.classList.remove("show");
+            window.location.reload();
+        } catch (error) {
+            if (error?.response?.error?.code === "EMAIL_EXISTS") {
+                formSignUpEmail.querySelector("span").textContent = error.response.error.message;
+                formSignUpEmail.classList.add("invalid");
+
+                setTimeout(() => {
+                    formSignUpEmail.classList.remove("invalid");
+                }, 2000);
+            }
+
+            const passwordError = error.response.error.details.find(detail => detail.field === "password");
+            if (error?.response?.error?.code === "VALIDATION_ERROR") {
+                formSignUpPassword.querySelector("span").textContent = passwordError.message;
+                formSignUpPassword.classList.add("invalid");
+
+                setTimeout(() => {
+                    formSignUpPassword.classList.remove("invalid");
+                }, 2000);
+            }
+        }
+    });
+
+    // Login form
+    loginForm.querySelector(".auth-form-content").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = $("#loginEmail").value.trim();
+        const password = $("#loginPassword").value.trim();
+
+
+        // Xử lý lỗi người dùng nhập
+        if (!email) {
+            formLoginEmail.classList.add("invalid");
+        } else {
+            formLoginEmail.classList.remove("invalid");
+        }
+
+        if (!password) {
+            formLoginPassword.classList.add("invalid");
+        }
+
+        const credentials = {
+            email,
+            password,
+        }
+
+        try {
+            const { user, access_token } = await httpRequest.post("/auth/login", credentials);
+            localStorage.setItem("accessToken", access_token);
+            localStorage.setItem("currentUser", user);
+            authModal.classList.remove("show");
+            window.location.reload();
+        } catch (error) {
+            if (error?.response?.error?.code === "INVALID_CREDENTIALS") {
+                formLoginPassword.querySelector("span").textContent = error.response.error.message;
+            }
+        }
+    });
 });
 
 // User Menu Dropdown Functionality
@@ -108,12 +201,30 @@ document.addEventListener("DOMContentLoaded", function () {
         // Close dropdown first
         userDropdown.classList.remove("show");
 
-        console.log("Logout clicked");
         // TODO: Students will implement logout logic here
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("currentUser");
+        window.location.reload();
     });
 });
 
 // Other functionality
-document.addEventListener("DOMContentLoaded", function () {
-    // TODO: Implement other functionality here
+document.addEventListener("DOMContentLoaded", async () => {
+    const authButtons = $(".auth-buttons");
+    const userAvatar = $("#userAvatar");
+
+    try {
+        const { user } = await httpRequest.get("/users/me");
+        updateCurrentUser(user);
+        userAvatar.classList.add("show");
+    } catch (error) {
+        authButtons.classList.add("show");
+    }
 });
+
+function updateCurrentUser(user) {
+    const userAvatar = $("#user-avatar");
+    if (user.avatar_url) {
+        userAvatar.src = user.avatar_url;
+    }
+}

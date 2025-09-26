@@ -66,11 +66,7 @@
 /* Main Content */
 .main-content {
     grid-area: main;
-    background: linear-gradient(
-        to bottom,
-        #535353 0%,
-        var(--bg-secondary) 250px
-    );
+    background: linear-gradient(to bottom, #535353 0%, var(--bg-secondary) 250px);
     border-radius: var(--radius-md);
     display: flex;
     flex-direction: column;
@@ -100,9 +96,13 @@
 }
 
 .auth-buttons {
-    display: flex;
+    display: none;
     align-items: center;
     gap: var(--spacing-md);
+}
+
+.auth-buttons.show {
+    display: flex;
 }
 
 .content-wrapper {
