@@ -376,7 +376,7 @@
 }
 
 .verified-badge {
-    display: flex;
+    display: none;
     align-items: center;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
@@ -387,6 +387,10 @@
 
 .verified-badge i {
     font-size: 16px;
+}
+
+.verified-badge.show {
+    display: flex;
 }
 
 .artist-name {
@@ -463,6 +467,27 @@
 
 .track-item:hover {
     background-color: var(--bg-tertiary);
+}
+
+.track-item:hover .track-item-play-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+.track-image {
+    position: relative;
+}
+
+.track-item-play-btn {
+    position: absolute;
+    color: rgb(20, 20, 20);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in;
 }
 
 .track-item.playing {

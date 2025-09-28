@@ -1,8 +1,11 @@
 import httpRequest from "./httpRequest.js";
 
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 // Render trending tracks
 function renderTrendingTrack(data) {
-    const trendingTrackList = document.querySelector(".hits-grid");
+    const trendingTrackList = $(".hits-grid");
     trendingTrackList.innerHTML = data.map((track) => {
         return `<div class="hit-card">
             <div class="hit-card-cover">
@@ -20,7 +23,7 @@ function renderTrendingTrack(data) {
 }
 
 // Show trending tracks
-export async function showTrendingTrack() {
+export async function showTrendingTracks() {
     try {
         const data = await httpRequest.get("/tracks/trending?limit=6");
         renderTrendingTrack(data.tracks);

@@ -209,7 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Import
-import { showTrendingTrack } from "./utils/tracks.js";
+import { showTrendingTracks } from "./utils/tracks.js";
+import { showTrendingArtists, showArtistById, initArtistCardListeners } from "./utils/artists.js";
+
 
 // Other functionality
 document.addEventListener("DOMContentLoaded", async () => {
@@ -225,7 +227,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
-    showTrendingTrack();
+    showTrendingTracks();
+
+    // Hiển thị các nghệ sĩ phổ biến
+    showTrendingArtists();
+
+    // Chọn nghệ sĩ 
+    initArtistCardListeners();
+
+    // Hiển thị nghệ sĩ được chọn
+    showArtistById();
 });
 
 function updateCurrentUser(user) {
