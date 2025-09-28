@@ -208,6 +208,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Import
+import { showTrendingTrack } from "./utils/tracks.js";
+
 // Other functionality
 document.addEventListener("DOMContentLoaded", async () => {
     const authButtons = $(".auth-buttons");
@@ -220,6 +223,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         authButtons.classList.add("show");
     }
+
+    // Hiển thị các bài hát thịnh hành hôm nay
+    showTrendingTrack();
 });
 
 function updateCurrentUser(user) {
