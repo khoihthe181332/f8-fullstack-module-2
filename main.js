@@ -3,6 +3,8 @@ import httpRequest from "./utils/httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+// let currentSong = ...
+
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", function () {
     // Get DOM elements
@@ -218,10 +220,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const authButtons = $(".auth-buttons");
     const userAvatar = $("#userAvatar");
 
+    // Your library
+    const yourLibrary = $(".sidebar-nav");
+
     try {
         const { user } = await httpRequest.get("/users/me");
         updateCurrentUser(user);
         userAvatar.classList.add("show");
+        yourLibrary.classList.add("show"); // Chỉ hiển thị khi đã đăng nhập 
     } catch (error) {
         authButtons.classList.add("show");
     }
@@ -245,3 +251,30 @@ function updateCurrentUser(user) {
         userAvatar.src = user.avatar_url;
     }
 }
+
+// Your Library
+$$(".library-item").forEach(item => {
+    item.addEventListener("click", (e) => {
+        $$(".library-item").forEach(otherItem => {
+            otherItem.classList.remove("active");
+        });
+
+        item.classList.add("active");
+    });
+});
+
+// Event mở ô tìm kiếm trong your library
+document.addEventListener("click", (e) => {
+    e.preventDefault();
+    const searchLibraryBtn = e.target.closest(".search-library-btn");
+    const searchLibraryInput = $(".search-library-input");
+
+    if (searchLibraryBtn || e.target.closest(".search-library-input")) {
+        searchLibraryInput.classList.add("show");
+        setTimeout(() => {
+            searchLibraryInput.focus();
+        }, 200)
+    } else {
+        searchLibraryInput.classList.remove("show");
+    }
+});

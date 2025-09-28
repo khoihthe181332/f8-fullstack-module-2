@@ -33,9 +33,13 @@
 }
 
 .sidebar-nav {
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: var(--spacing-md);
+}
+
+.sidebar-nav.show {
+    display: flex;
 }
 
 .nav-section {
