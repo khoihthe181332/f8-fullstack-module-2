@@ -51,10 +51,11 @@ function renderArtistById(data) {
             </div>
             <h1 class="artist-name">${data.name}</h1>
             <p class="monthly-listeners">
-                ${data.monthly_listeners.toLocaleString()} monthly listeners
+                ${data.monthly_listeners} monthly listeners
             </p>
         </div>`;
 }
+
 function getTimeProgress(duration) {
     const min = Math.floor(duration / 60);
     const sec = String(duration % 60).padStart(2, "0");
@@ -91,7 +92,8 @@ function renderArtistPopularTracks(data) {
 
 // GET Artist by ID
 export async function showArtistById(artistId) {
-    artistId = localStorage.getItem("artistID") || "";
+    const firstArtistTrending = await httpRequest.get("/artists/trending?limit=2");
+    artistId = localStorage.getItem("artistID") || firstArtistTrending.artists[0].id;
 
     if (!artistId) {
         console.error("Artist ID is required");
