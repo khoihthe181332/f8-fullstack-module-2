@@ -453,7 +453,7 @@
     </div>
 
     <!-- Auth Modal -->
-    <div class="modal-overlay" id="authModal">
+    <div class="modal-overlay show" id="authModal">
         <div class="modal-container">
             <button class="modal-close" id="modalClose">
                 <i class="fas fa-times"></i>
@@ -481,7 +481,10 @@
                         </div>
 
                         <div class="form-group" id="form-signup-password">
-                            <input type="password" placeholder="Password" class="form-input" id="signupPassword" />
+                            <div class="password-field">
+                                <input type="password" placeholder="Password" class="form-input" id="signupPassword" />
+                                <i class="fa-solid fa-eye toggle-password"></i>
+                            </div>
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>
                                 <span>Password must be at least 8
@@ -517,7 +520,10 @@
                         </div>
 
                         <div class="form-group" id="form-login-password">
-                            <input type="password" placeholder="Password" class="form-input" id="loginPassword" />
+                            <div class="password-field">
+                                <input type="password" placeholder="Password" class="form-input" id="loginPassword" />
+                                <i class="fa-solid fa-eye toggle-password"></i>
+                            </div>
                             <div class="error-message">
                                 <i class="fas fa-info-circle"></i>
                                 <span>Please enter your password</span>

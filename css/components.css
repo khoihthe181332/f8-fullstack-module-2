@@ -781,6 +781,27 @@
     animation: modalSlideIn 0.3s ease-out;
 }
 
+/* Mắt xem mật khẩu */
+.password-field {
+    /* display: flex; */
+    position: relative;
+}
+
+.password-field .toggle-password {
+    position: absolute;
+    right: 2.5%;
+    top: 50%;
+    padding: 8px;
+    transform: translateY(-50%);
+    color: #5c5c5c;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.password-field .toggle-password:hover {
+    background-color: var(--bg-hover);
+}
+
 @keyframes modalSlideIn {
     from {
         opacity: 0;
