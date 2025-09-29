@@ -61,10 +61,16 @@
     margin-bottom: var(--spacing-md);
 }
 
-.library-content {
+.library-content,
+.playlists-followed-container,
+.albums-followed-container {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
+}
+
+.album-followed-item .item-image {
+    border-radius: 50%;
 }
 
 /* Main Content */

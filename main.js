@@ -88,22 +88,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Xử lý người dùng xem được mật khẩu 
-    const togglePasswordBtns = $$(".toggle-password");
-    const passwordFields = $$('input[type="password"]')
+    (function togglePassword() {
+        const togglePasswordBtns = $$(".toggle-password");
 
-    togglePasswordBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            passwordFields.forEach(input => {
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    btn.classList.replace("fa-eye", "fa-eye-slash");
+        togglePasswordBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                // Tìm input password trong cùng form-group với button này
+                const formGroup = this.closest(".form-group");
+                if (!formGroup) return;
+
+                const passwordInput = formGroup.querySelector('input[type="password"], input[type="text"]');
+                if (!passwordInput) return;
+
+                // Toggle type và icon
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    this.classList.replace("fa-eye", "fa-eye-slash");
                 } else {
-                    input.type = 'password';
-                    btn.classList.replace("fa-eye-slash", "fa-eye");
+                    passwordInput.type = "password";
+                    this.classList.replace("fa-eye-slash", "fa-eye");
                 }
-            })
-        })
-    });
+            });
+        });
+    })();
 
     // Register form
     signupForm.querySelector(".auth-form-content").addEventListener("submit", async (e) => {
@@ -260,6 +267,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
 import { showTrendingArtists, showArtistById, initArtistCardListeners } from "./utils/artists.js";
+import { showPlaylistsFollowed } from "./utils/playlists.js";
+import { showAlbumsFollowed } from "./utils/albums.js";
 
 
 // Other functionality
@@ -277,6 +286,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         yourLibrary.classList.add("show"); // Chỉ hiển thị khi đã đăng nhập 
     } catch (error) {
         authButtons.classList.add("show");
+    }
+
+    if (currentUser) {
+        // Playlists
+        showPlaylistsFollowed();
+        // Albums
+        showAlbumsFollowed();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
