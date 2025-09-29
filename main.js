@@ -87,18 +87,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Xử lý người dùng xem được mật khẩu 
-    const togglePassword = $(".toggle-password");
+    const togglePasswordBtns = $$(".toggle-password");
     const passwordFields = $$('input[type="password"]')
 
-    togglePassword.addEventListener("click", (e) => {
-        passwordFields.forEach(input => {
-            if (input.type === 'password') {
-                input.type = 'text';
-                togglePassword.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = 'password';
-                togglePassword.classList.replace("fa-eye-slash", "fa-eye");
-            }
+    togglePasswordBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            passwordFields.forEach(input => {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.classList.replace("fa-eye", "fa-eye-slash");
+                } else {
+                    input.type = 'password';
+                    btn.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            })
         })
     });
 
