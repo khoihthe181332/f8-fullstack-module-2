@@ -5,8 +5,7 @@ class HttpRequest {
 
     async _send(path, method, data, options = {}) {
         try {
-            const _options =
-            {
+            const _options = {
                 ...options,
                 method,
                 headers: {

@@ -3,6 +3,7 @@ import httpRequest from "./utils/httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const currentUser = localStorage.getItem("currentUser");
 // let currentSong = ...
 
 // Auth Modal Functionality
@@ -156,7 +157,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = $("#loginEmail").value.trim();
         const password = $("#loginPassword").value.trim();
 
-
         // Xử lý lỗi người dùng nhập
         if (!email) {
             formLoginEmail.classList.add("invalid");
@@ -185,6 +185,35 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    if (currentUser) {
+        // Your Library
+        const libraryItems = $$(".library-item");
+        libraryItems.forEach(item => {
+            item.addEventListener("click", (e) => {
+                libraryItems.forEach(otherItem => {
+                    otherItem.classList.remove("active");
+                });
+
+                item.classList.add("active");
+            });
+        });
+
+        // Event mở ô tìm kiếm trong your library
+        const searchLibraryInput = $(".search-library-input");
+        if (searchLibraryInput) {
+            document.addEventListener("click", (e) => {
+                const isSearchArea = e.target.closest(".search-library-btn, .search-library-input");
+
+                if (isSearchArea) {
+                    searchLibraryInput.classList.add("show");
+                    setTimeout(() => searchLibraryInput.focus(), 200);
+                } else {
+                    searchLibraryInput.classList.remove("show");
+                }
+            });
+        }
+    }
 });
 
 // User Menu Dropdown Functionality
@@ -270,29 +299,4 @@ function updateCurrentUser(user) {
     }
 }
 
-// Your Library
-$$(".library-item").forEach(item => {
-    item.addEventListener("click", (e) => {
-        $$(".library-item").forEach(otherItem => {
-            otherItem.classList.remove("active");
-        });
 
-        item.classList.add("active");
-    });
-});
-
-// Event mở ô tìm kiếm trong your library
-document.addEventListener("click", (e) => {
-    e.preventDefault();
-    const searchLibraryBtn = e.target.closest(".search-library-btn");
-    const searchLibraryInput = $(".search-library-input");
-
-    if (searchLibraryBtn || e.target.closest(".search-library-input")) {
-        searchLibraryInput.classList.add("show");
-        setTimeout(() => {
-            searchLibraryInput.focus();
-        }, 200)
-    } else {
-        searchLibraryInput.classList.remove("show");
-    }
-});
