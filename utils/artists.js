@@ -51,7 +51,7 @@ function renderArtistById(data) {
             </div>
             <h1 class="artist-name">${data.name}</h1>
             <p class="monthly-listeners">
-                ${data.monthly_listeners} monthly listeners
+                ${data.monthly_listeners.toLocaleString()} monthly listeners
             </p>
         </div>`;
 }
