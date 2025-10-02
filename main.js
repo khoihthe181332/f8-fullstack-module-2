@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const { user, access_token } = await httpRequest.post("/auth/register", credentials);
             localStorage.setItem("accessToken", access_token);
-            localStorage.setItem("currentUser", user);
+            localStorage.setItem("currentUser", user.email);
             authModal.classList.remove("show");
             window.location.reload();
         } catch (error) {
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const { user, access_token } = await httpRequest.post("/auth/login", credentials);
             localStorage.setItem("accessToken", access_token);
-            localStorage.setItem("currentUser", user);
+            localStorage.setItem("currentUser", user.email);
             authModal.classList.remove("show");
             window.location.reload();
         } catch (error) {
