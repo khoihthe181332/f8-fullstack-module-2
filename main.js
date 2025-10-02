@@ -387,22 +387,19 @@ function updateCurrentUser(user) {
 }
 
 let currentContextItem = null;
+
 function unfollowedLibrary() {
     const contextMenu = $('#contextMenu');
     const unfollowItem = $('#unfollowItem');
 
     // Context Menu - Right Click
     document.addEventListener('contextmenu', function (e) {
-        // Tìm library-item gần nhất
         const libraryItem = e.target.closest('.library-item');
 
-        // Chỉ hiện context menu cho items có data-item-type
         if (libraryItem && libraryItem.dataset.itemType) {
             e.preventDefault();
-
             currentContextItem = libraryItem;
 
-            // Đặt vị trí context menu
             contextMenu.style.left = e.pageX + 'px';
             contextMenu.style.top = e.pageY + 'px';
             contextMenu.classList.add('show');
@@ -417,39 +414,75 @@ function unfollowedLibrary() {
     });
 
     // Xử lý click vào Unfollow
-    unfollowItem.addEventListener('click', function () {
-        if (currentContextItem) {
-            const itemType = currentContextItem.dataset.itemType;
+    unfollowItem.addEventListener('click', async function () {
+        if (!currentContextItem) return;
 
-            // Xử lý theo từng loại
+        const itemType = currentContextItem.dataset.itemType;
+        const itemToRemove = currentContextItem; // Lưu reference trước khi xóa
+
+        // Đóng context menu ngay lập tức
+        contextMenu.classList.remove('show');
+
+        try {
+            let result;
             if (itemType === 'artist') {
-                unfollowArtist();
+                result = await unfollowArtist(itemToRemove);
             } else if (itemType === 'playlist') {
-                removePlaylist();
+                result = await removePlaylist(itemToRemove);
             } else if (itemType === 'album') {
-                removeAlbum();
+                result = await removeAlbum(itemToRemove);
             }
 
-            // Đóng context menu
-            contextMenu.classList.remove('show');
+            // Nếu API thành công, xóa phần tử khỏi DOM với animation
+            if (result) {
+                itemToRemove.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                itemToRemove.style.opacity = '0';
+                itemToRemove.style.transform = 'translateX(-20px)';
+
+                // Xóa phần tử sau khi animation hoàn thành
+                setTimeout(() => {
+                    itemToRemove.remove();
+                }, 300);
+            }
+        } catch (error) {
+            console.error('Error unfollowing item:', error);
+            // Có thể hiển thị thông báo lỗi cho user
+            alert(`Không thể xóa ${itemType} Vui lòng thử lại!`);
+        } finally {
             currentContextItem = null;
         }
     });
-};
-
-async function unfollowArtist() {
-    const artistId = currentContextItem.dataset.artistId;
-    return await httpRequest.del(`/artists/${artistId}/follow`);
 }
 
-async function removePlaylist() {
-    const playlistId = currentContextItem.dataset.playlistId;
-    return await httpRequest.del(`/playlists/${playlistId}/follow`);
+async function unfollowArtist(item) {
+    const artistId = item.dataset.artistId;
+    try {
+        return await httpRequest.del(`/artists/${artistId}/follow`);
+    } catch (error) {
+        console.error('Error unfollowing artist:', error);
+        throw error;
+    }
 }
 
-async function removeAlbum() {
-    const albumId = currentContextItem.dataset.albumId;
-    return await httpRequest.del(`/albums/${albumId}/like`);
+async function removePlaylist(item) {
+    const playlistId = item.dataset.playlistId;
+    try {
+        return await httpRequest.del(`/playlists/${playlistId}/follow`);
+    } catch (error) {
+        console.error('Error removing playlist:', error);
+        throw error;
+    }
 }
 
+async function removeAlbum(item) {
+    const albumId = item.dataset.albumId;
+    try {
+        return await httpRequest.del(`/albums/${albumId}/like`);
+    } catch (error) {
+        console.error('Error removing album:', error);
+        throw error;
+    }
+}
 
+// Gọi hàm khi trang load
+unfollowedLibrary();
