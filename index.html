@@ -34,8 +34,8 @@
                 </div>
 
                 <div class="nav-tabs">
-                    <button class="nav-tab active">Playlists</button>
-                    <button class="nav-tab">Artists</button>
+                    <a href="?tab=playlists" class="nav-tab" data-tab="playlists">Playlists</a>
+                    <a href="?tab=artists" class="nav-tab" data-tab="artists">Artists</a>
                 </div>
 
                 <div class="search-library">
@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="library-content">
-                    <div class="library-item active">
+                    <div class="library-item liked-songs-item active">
                         <div class="item-icon liked-songs">
                             <i class="fas fa-heart"></i>
                         </div>
@@ -88,6 +88,27 @@
                             <img src="placeholder.svg?height=48&width=48" alt="Đen" class="item-image" />
                             <div class="item-info">
                                 <div class="item-title">...</div>
+                                <div class="item-subtitle">Artist</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Artists followed -->
+                    <div class="artists-followed-container hidden">
+                        <div class="library-item">
+                            <img src="https://via.placeholder.com/48/4ecdc4/ffffff?text=Đ" alt="Đen"
+                                class="item-image" />
+                            <div class="item-info">
+                                <div class="item-title">Đen</div>
+                                <div class="item-subtitle">Artist</div>
+                            </div>
+                        </div>
+
+                        <div class="library-item">
+                            <img src="https://via.placeholder.com/48/4ecdc4/ffffff?text=ST" alt="Sơn Tùng"
+                                class="item-image" />
+                            <div class="item-info">
+                                <div class="item-title">Sơn Tùng M-TP</div>
                                 <div class="item-subtitle">Artist</div>
                             </div>
                         </div>

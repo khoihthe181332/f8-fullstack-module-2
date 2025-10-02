@@ -220,6 +220,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
+
+        // Lấy URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentTab = urlParams.get('tab') || 'playlists'; // Mặc định là 'playlists'
+
+        // Lấy các elements
+        const navTabs = $$('.nav-tab');
+        const likedSongsItem = $('.liked-songs-item');
+        const playlistsContainer = $('.playlists-followed-container');
+        const albumsContainer = $('.albums-followed-container');
+        const artistsContainer = $('.artists-followed-container');
+
+        // Hàm cập nhật giao diện dựa trên tab hiện tại
+        function updateView(tab) {
+            // Xóa class active khỏi tất cả các tab
+            navTabs.forEach(t => t.classList.remove('active'));
+
+            // Thêm class active vào tab hiện tại
+            const activeTab = $(`.nav-tab[data-tab="${tab}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+
+            // Hiển thị/ẩn nội dung tương ứng
+            if (tab === 'playlists') {
+                // Hiện Playlists và Albums
+                likedSongsItem.classList.remove('hidden');
+                playlistsContainer.classList.remove('hidden');
+                albumsContainer.classList.remove('hidden');
+                artistsContainer.classList.add('hidden');
+            } else if (tab === 'artists') {
+                // Hiện Artists
+                likedSongsItem.classList.add('hidden');
+                playlistsContainer.classList.add('hidden');
+                albumsContainer.classList.add('hidden');
+                artistsContainer.classList.remove('hidden');
+            }
+        }
+
+        // Cập nhật view khi trang load
+        updateView(currentTab);
+
+        // Xử lý sự kiện popstate (khi người dùng nhấn nút back/forward)
+        window.addEventListener('popstate', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab') || 'playlists';
+            updateView(tab);
+        });
+
+        // Xử lý click vào tab (optional - để có smooth transition không reload trang)
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+                const tabValue = this.getAttribute('data-tab');
+
+                // Cập nhật URL mà không reload trang
+                const newUrl = `?tab=${tabValue}`;
+                window.history.pushState({ tab: tabValue }, '', newUrl);
+
+                // Cập nhật view
+                updateView(tabValue);
+            });
+        });
     }
 });
 
@@ -266,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
-import { showTrendingArtists, showArtistById, initArtistCardListeners } from "./utils/artists.js";
+import { showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed } from "./utils/artists.js";
 import { showPlaylistsFollowed } from "./utils/playlists.js";
 import { showAlbumsFollowed } from "./utils/albums.js";
 
@@ -289,10 +352,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (currentUser) {
-        // Playlists
+        // Playlists followed
         showPlaylistsFollowed();
-        // Albums
+        // Albums followed
         showAlbumsFollowed();
+        // Artists followed
+        showArtistsFollowed();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
@@ -314,5 +379,6 @@ function updateCurrentUser(user) {
         userAvatar.src = user.avatar_url;
     }
 }
+
 
 

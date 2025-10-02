@@ -11,7 +11,7 @@ function renderAlbumsFollowed(data) {
                             <img src="${data.cover_image_url}" alt="${data.title}" class="item-image" />
                             <div class="item-info">
                                 <div class="item-title">${data.title}</div>
-                                <div class="item-subtitle">Artist</div>
+                                <div class="item-subtitle">Album's</div>
                             </div>
                         </div>`;
     }).join("");

@@ -123,3 +123,27 @@ export function initArtistCardListeners() {
         }
     });
 }
+
+function renderArtistsFollowed(data) {
+    const artistsFollowedContainer = $(".artists-followed-container");
+    artistsFollowedContainer.innerHTML = data.map(data => {
+        return `<div class="library-item">
+                            <img src="${data.image_url}" alt="${data.name}"
+                                class="item-image" />
+                            <div class="item-info">
+                                <div class="item-title">${data.name}</div>
+                                <div class="item-subtitle">Artist</div>
+                            </div>
+                        </div>`
+    }).join("");
+}
+
+export async function showArtistsFollowed() {
+    try {
+        const data = await httpRequest.get("/me/following?limit=20&offset=0");
+        renderArtistsFollowed(data.artists);
+    } catch (error) {
+        console.error("Không tải được danh sách nghệ sĩ đã theo dõi");
+    }
+
+}
