@@ -24,7 +24,7 @@ function renderTrendingArtists(data) {
 
 export async function showTrendingArtists() {
     try {
-        const data = await httpRequest.get("/artists/trending?limit=5");
+        const data = await httpRequest.get("/artists/trending?limit=15");
         renderTrendingArtists(data.artists);
     } catch (error) {
         console.error("Không tải được danh sách nghệ sĩ:", error);

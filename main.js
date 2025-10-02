@@ -492,6 +492,3 @@ async function removeAlbum(item) {
         throw error;
     }
 }
-
-// Gọi hàm khi trang load
-unfollowedLibrary();
