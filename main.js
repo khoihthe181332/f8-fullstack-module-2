@@ -470,7 +470,24 @@ function unfollowedLibrary() {
 async function unfollowArtist(item) {
     const artistId = item.dataset.artistId;
     try {
-        return await httpRequest.del(`/artists/${artistId}/follow`);
+        await httpRequest.del(`/artists/${artistId}/follow`);
+
+        // Cập nhật lại button Follow nếu đang ở trang artist đó
+        const heroBackground = $(".hero-background");
+        const currentArtistId = heroBackground?.dataset.artistId;
+
+        if (currentArtistId === artistId) {
+            const followBtn = $(".follow-button");
+            if (followBtn) {
+                followBtn.textContent = "Follow";
+                followBtn.classList.remove("following");
+                followBtn.disabled = false;
+            }
+        }
+
+        // Refresh danh sách nghệ sĩ đã theo dõi
+        await showArtistsFollowed();
+
     } catch (error) {
         console.error('Error unfollowing artist:', error);
         throw error;

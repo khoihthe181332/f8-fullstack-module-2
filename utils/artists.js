@@ -34,10 +34,20 @@ export async function showTrendingArtists() {
 // Render Artist by ID
 function renderArtistById(data) {
     const artistHero = $(".artist-hero");
+    const artistControls = $(".artist-controls");
+
     if (!artistHero) {
         console.error("Artist hero element not found");
         return;
     }
+
+    artistControls.innerHTML = `<button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="follow-button ${data.is_following ? "following" : ""}">${data.is_following ? "Following" : "Follow"}</button>
+                    <button class="more-button">
+                        <i class="fas fa-ellipsis"></i>
+                    </button>`;
 
     artistHero.innerHTML = `
         <div class="hero-background" data-artist-id="${data.id}">
@@ -188,19 +198,32 @@ window.addEventListener('popstate', function (e) {
 });
 
 // Hàm follow artist
-export async function followArtist() {
-    const followBtn = $(".follow-button");
-    const urlParams = new URLSearchParams(window.location.search);
+export function followArtist() {
+    // Dùng event delegation thay vì query button trực tiếp
+    document.addEventListener("click", async (e) => {
+        const followBtn = e.target.closest(".follow-button");
+        if (!followBtn) return;
 
-    followBtn.addEventListener("click", async (e) => {
         e.preventDefault();
+
+        // Kiểm tra đã follow chưa
+        if (followBtn.disabled || followBtn.classList.contains("following")) return;
 
         // Disable button để tránh spam click
         followBtn.disabled = true;
 
         try {
-            const artistId = urlParams.get('id');
-            const response = await httpRequest.post(`/artists/${artistId}/follow`);
+            // Lấy artistId từ hero background
+            const heroBackground = $(".hero-background");
+            const artistId = heroBackground?.dataset.artistId;
+
+            if (!artistId) {
+                console.error("Không tìm thấy artist ID");
+                followBtn.disabled = false;
+                return;
+            }
+
+            await httpRequest.post(`/artists/${artistId}/follow`);
 
             // Cập nhật UI của button
             followBtn.textContent = "Following";
@@ -209,11 +232,9 @@ export async function followArtist() {
             // Refresh danh sách nghệ sĩ đã theo dõi
             await showArtistsFollowed();
 
-            return response;
         } catch (error) {
             console.error("Không thể theo dõi nghệ sĩ này");
-            followBtn.disabled = false; // Enable lại nếu có lỗi
-            throw error;
+            followBtn.disabled = false;
         }
     });
 }
