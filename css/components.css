@@ -442,7 +442,6 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-2xl);
 }
 
 .play-btn-large {
