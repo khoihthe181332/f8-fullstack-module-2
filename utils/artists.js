@@ -90,11 +90,22 @@ function renderArtistPopularTracks(data) {
     }).join("");
 }
 
+// Toggle view giữa home và artist page
+function toggleView(showArtist) {
+    const contentWrapper = $(".content-wrapper");
+    const artistPage = $(".artist-page");
+
+    if (showArtist) {
+        contentWrapper?.classList.add("hidden");
+        artistPage?.classList.remove("hidden");
+    } else {
+        contentWrapper?.classList.remove("hidden");
+        artistPage?.classList.add("hidden");
+    }
+}
+
 // GET Artist by ID
 export async function showArtistById(artistId) {
-    const firstArtistTrending = await httpRequest.get("/artists/trending?limit=2");
-    artistId = localStorage.getItem("artistID") || firstArtistTrending.artists[0].id;
-
     if (!artistId) {
         console.error("Artist ID is required");
         return;
@@ -103,26 +114,78 @@ export async function showArtistById(artistId) {
     try {
         const data = await httpRequest.get(`/artists/${artistId}`);
         renderArtistById(data);
+
         const artistPopularTrack = await httpRequest.get(`/artists/${artistId}/tracks/popular`);
         renderArtistPopularTracks(artistPopularTrack);
+
+        // Cập nhật URL
+        const newUrl = `?view=artist&id=${artistId}`;
+        window.history.pushState({ view: 'artist', artistId }, '', newUrl);
+
+        // Toggle view
+        toggleView(true);
     } catch (error) {
         console.error("Không tải được thông tin nghệ sĩ:", error);
     }
 }
 
-// Optional: Add event listeners for artist cards
+// Event listeners cho artist cards
 export function initArtistCardListeners() {
     document.addEventListener('click', (e) => {
         const artistCard = e.target.closest('.artist-card');
         if (artistCard) {
+            e.preventDefault();
             const artistId = artistCard.dataset.artistId;
             if (artistId) {
-                localStorage.setItem("artistID", artistId);
+                showArtistById(artistId);
+            }
+        }
+
+        // Click vào library artist item
+        const libraryArtistItem = e.target.closest('.library-item[data-item-type="artist"]');
+        if (libraryArtistItem) {
+            const artistId = libraryArtistItem.dataset.artistId;
+            if (artistId) {
                 showArtistById(artistId);
             }
         }
     });
 }
+
+// Hiển thị trang Home
+export function showHome() {
+    // Cập nhật URL về trang chủ
+    window.history.pushState({ view: 'home' }, '', window.location.pathname);
+
+    // Toggle view về home
+    toggleView(false);
+}
+
+// Xử lý URL parameters khi trang load
+export function handleUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view');
+    const artistId = urlParams.get('id');
+
+    if (view === 'artist' && artistId) {
+        showArtistById(artistId);
+    } else {
+        toggleView(false);
+    }
+}
+
+// Event listener cho nút back/forward của browser
+window.addEventListener('popstate', function (e) {
+    if (e.state) {
+        if (e.state.view === 'artist' && e.state.artistId) {
+            showArtistById(e.state.artistId);
+        } else {
+            toggleView(false);
+        }
+    } else {
+        handleUrlParams();
+    }
+});
 
 function renderArtistsFollowed(data) {
     const artistsFollowedContainer = $(".artists-followed-container");

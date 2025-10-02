@@ -292,6 +292,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const userDropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
 
+    const homeBtn = $(".home-btn");
+
     // Toggle dropdown when clicking avatar
     userAvatar.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -315,6 +317,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    homeBtn.addEventListener("click", () => {
+        showHome();
+    })
+
     // Handle logout button click
     logoutBtn.addEventListener("click", function () {
         // Close dropdown first
@@ -325,12 +331,14 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.removeItem("currentUser");
         window.location.reload();
     });
+
+
 });
 
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
 import {
-    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed
+    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, showHome
 } from "./utils/artists.js";
 
 import { showPlaylistsFollowed } from "./utils/playlists.js";
@@ -367,16 +375,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
-    showTrendingTracks();
+    await showTrendingTracks();
 
     // Hiển thị các nghệ sĩ phổ biến
-    showTrendingArtists();
+    await showTrendingArtists();
 
     // Chọn nghệ sĩ 
     initArtistCardListeners();
 
     // Hiển thị nghệ sĩ được chọn
     showArtistById();
+    handleUrlParams();
 });
 
 function updateCurrentUser(user) {
