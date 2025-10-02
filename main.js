@@ -329,7 +329,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
-import { showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed } from "./utils/artists.js";
+import {
+    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed
+} from "./utils/artists.js";
+
 import { showPlaylistsFollowed } from "./utils/playlists.js";
 import { showAlbumsFollowed } from "./utils/albums.js";
 
@@ -358,6 +361,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         showAlbumsFollowed();
         // Artists followed
         showArtistsFollowed();
+
+        // Unfollowed
+        unfollowedLibrary();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
@@ -380,5 +386,70 @@ function updateCurrentUser(user) {
     }
 }
 
+let currentContextItem = null;
+function unfollowedLibrary() {
+    const contextMenu = $('#contextMenu');
+    const unfollowItem = $('#unfollowItem');
+
+    // Context Menu - Right Click
+    document.addEventListener('contextmenu', function (e) {
+        // Tìm library-item gần nhất
+        const libraryItem = e.target.closest('.library-item');
+
+        // Chỉ hiện context menu cho items có data-item-type
+        if (libraryItem && libraryItem.dataset.itemType) {
+            e.preventDefault();
+
+            currentContextItem = libraryItem;
+
+            // Đặt vị trí context menu
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+            contextMenu.classList.add('show');
+        }
+    });
+
+    // Đóng context menu khi click ra ngoài
+    document.addEventListener('click', function (e) {
+        if (!contextMenu.contains(e.target)) {
+            contextMenu.classList.remove('show');
+        }
+    });
+
+    // Xử lý click vào Unfollow
+    unfollowItem.addEventListener('click', function () {
+        if (currentContextItem) {
+            const itemType = currentContextItem.dataset.itemType;
+
+            // Xử lý theo từng loại
+            if (itemType === 'artist') {
+                unfollowArtist();
+            } else if (itemType === 'playlist') {
+                removePlaylist();
+            } else if (itemType === 'album') {
+                removeAlbum();
+            }
+
+            // Đóng context menu
+            contextMenu.classList.remove('show');
+            currentContextItem = null;
+        }
+    });
+};
+
+async function unfollowArtist() {
+    const artistId = currentContextItem.dataset.artistId;
+    return await httpRequest.del(`/artists/${artistId}/follow`);
+}
+
+async function removePlaylist() {
+    const playlistId = currentContextItem.dataset.playlistId;
+    return await httpRequest.del(`/playlists/${playlistId}/follow`);
+}
+
+async function removeAlbum() {
+    const albumId = currentContextItem.dataset.albumId;
+    return await httpRequest.del(`/albums/${albumId}/like`);
+}
 
 

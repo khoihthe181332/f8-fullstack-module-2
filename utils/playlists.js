@@ -5,8 +5,8 @@ const $$ = document.querySelectorAll.bind(document);
 
 function renderPlaylistsFollowed(data) {
     const playlistsLiked = $(".playlists-followed-container");
-    playlistsLiked.innerHTML = data.map(data => {
-        return `<div class="library-item">
+    playlistsLiked.innerHTML = data.map((data) => {
+        return `<div class="library-item" data-item-type="playlist" data-playlist-id="${data.id}">
                             <img src="${data.image_url}" alt="${data.name}" class="item-image" />
                             <div class="item-info">
                                 <div class="item-title">${data.name}</div>

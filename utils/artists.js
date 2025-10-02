@@ -127,7 +127,7 @@ export function initArtistCardListeners() {
 function renderArtistsFollowed(data) {
     const artistsFollowedContainer = $(".artists-followed-container");
     artistsFollowedContainer.innerHTML = data.map(data => {
-        return `<div class="library-item">
+        return `<div class="library-item" data-item-type="artist" data-item-name="${data.name}" data-artist-id="${data.id}">
                             <img src="${data.image_url}" alt="${data.name}"
                                 class="item-image" />
                             <div class="item-info">
@@ -145,5 +145,7 @@ export async function showArtistsFollowed() {
     } catch (error) {
         console.error("Không tải được danh sách nghệ sĩ đã theo dõi");
     }
-
 }
+
+
+
