@@ -317,6 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Về trang chủ
     homeBtn.addEventListener("click", () => {
         showHome();
     })
@@ -338,7 +339,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
 import {
-    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, showHome
+    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, showHome, followArtist
 } from "./utils/artists.js";
 
 import { showPlaylistsFollowed } from "./utils/playlists.js";
@@ -363,12 +364,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (currentUser) {
+        // Follow artist
+        followArtist();
+
         // Playlists followed
-        showPlaylistsFollowed();
+        await showPlaylistsFollowed();
         // Albums followed
-        showAlbumsFollowed();
+        await showAlbumsFollowed();
         // Artists followed
-        showArtistsFollowed();
+        await showArtistsFollowed();
 
         // Unfollowed
         unfollowedLibrary();

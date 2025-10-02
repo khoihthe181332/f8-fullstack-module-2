@@ -187,6 +187,37 @@ window.addEventListener('popstate', function (e) {
     }
 });
 
+// Hàm follow artist
+export async function followArtist() {
+    const followBtn = $(".follow-button");
+    const urlParams = new URLSearchParams(window.location.search);
+
+    followBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        // Disable button để tránh spam click
+        followBtn.disabled = true;
+
+        try {
+            const artistId = urlParams.get('id');
+            const response = await httpRequest.post(`/artists/${artistId}/follow`);
+
+            // Cập nhật UI của button
+            followBtn.textContent = "Following";
+            followBtn.classList.add("following");
+
+            // Refresh danh sách nghệ sĩ đã theo dõi
+            await showArtistsFollowed();
+
+            return response;
+        } catch (error) {
+            console.error("Không thể theo dõi nghệ sĩ này");
+            followBtn.disabled = false; // Enable lại nếu có lỗi
+            throw error;
+        }
+    });
+}
+
 function renderArtistsFollowed(data) {
     const artistsFollowedContainer = $(".artists-followed-container");
     artistsFollowedContainer.innerHTML = data.map(data => {

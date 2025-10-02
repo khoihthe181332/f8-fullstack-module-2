@@ -1178,3 +1178,9 @@
     text-overflow: ellipsis;
     font-weight: 400;
 }
+
+/* MORE */
+.follow-button.following {
+    background-color: var(--accent-primary);
+    border: unset;
+}
