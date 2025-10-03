@@ -4,7 +4,6 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 const currentUser = localStorage.getItem("currentUser");
-// let currentSong = ...
 
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -222,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const playlistsContainer = $('.playlists-followed-container');
         const albumsContainer = $('.albums-followed-container');
         const artistsContainer = $('.artists-followed-container');
+        const myPlaylistContainer = $(".my-playlists-container");
 
         // Hàm cập nhật giao diện dựa trên tab hiện tại
         function updateView(tab) {
@@ -239,6 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Hiện Playlists và Albums
                 likedSongsItem.classList.remove('hidden');
                 playlistsContainer.classList.remove('hidden');
+                myPlaylistContainer.classList.remove('hidden');
                 albumsContainer.classList.remove('hidden');
                 artistsContainer.classList.add('hidden');
             } else if (tab === 'artists') {
@@ -246,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 likedSongsItem.classList.add('hidden');
                 playlistsContainer.classList.add('hidden');
                 albumsContainer.classList.add('hidden');
+                myPlaylistContainer.classList.add('hidden');
                 artistsContainer.classList.remove('hidden');
             }
         }
@@ -354,7 +356,7 @@ import {
     showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, showHome, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed } from "./utils/playlists.js";
+import { showPlaylistsFollowed, showMyPlaylist } from "./utils/playlists.js";
 import { showAlbumsFollowed } from "./utils/albums.js";
 
 
@@ -378,6 +380,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentUser) {
         // Follow artist
         followArtist();
+
+        // My Playlist
+        await showMyPlaylist();
 
         // Playlists followed
         await showPlaylistsFollowed();
@@ -420,7 +425,7 @@ function unfollowedLibrary() {
     // Context Menu - Right Click
     document.addEventListener('contextmenu', function (e) {
         const libraryItem = e.target.closest('.library-item');
-
+        console.log(e.target.dataset.playlistId);
         if (libraryItem && libraryItem.dataset.itemType) {
             e.preventDefault();
             currentContextItem = libraryItem;
@@ -452,6 +457,8 @@ function unfollowedLibrary() {
             let result;
             if (itemType === 'artist') {
                 result = await unfollowArtist(itemToRemove);
+            } else if (itemType === 'myPlaylist') {
+                result = await deletePlaylist(itemToRemove);
             } else if (itemType === 'playlist') {
                 result = await removePlaylist(itemToRemove);
             } else if (itemType === 'album') {
@@ -510,6 +517,16 @@ async function removePlaylist(item) {
     const playlistId = item.dataset.playlistId;
     try {
         return await httpRequest.del(`/playlists/${playlistId}/follow`);
+    } catch (error) {
+        console.error('Error removing playlist:', error);
+        throw error;
+    }
+}
+
+async function deletePlaylist(item) {
+    const playlistId = item.dataset.playlistId;
+    try {
+        return await httpRequest.del(`/playlists/${playlistId}`);
     } catch (error) {
         console.error('Error removing playlist:', error);
         throw error;

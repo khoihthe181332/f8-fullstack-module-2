@@ -61,15 +61,18 @@
                 </div>
 
                 <div class="library-content">
-                    <div class="library-item liked-songs-item active">
-                        <div class="item-icon liked-songs">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="item-info">
-                            <div class="item-title">Liked Songs</div>
-                            <div class="item-subtitle">
-                                <i class="fas fa-thumbtack"></i>
-                                Playlist • 3 songs
+                    <!-- My Playlist -->
+                    <div class="my-playlists-container">
+                        <div class="library-item liked-songs-item active">
+                            <div class="item-icon liked-songs">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="item-info">
+                                <div class="item-title">Liked Songs</div>
+                                <div class="item-subtitle">
+                                    <i class="fas fa-thumbtack"></i>
+                                    Playlist • 3 songs
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,7 +164,7 @@
                 </div>
             </header>
 
-            <div class="content-wrapper ">
+            <div class="content-wrapper " style="display: none;">
                 <!-- Today's Biggest Hits Section -->
                 <section class="hits-section">
                     <div class="section-header">
@@ -421,7 +424,7 @@
                 </section>
             </div>
 
-            <div class="playlist-page hidden">
+            <div class="playlist-page ">
                 <!-- Playlist Header -->
                 <div class="playlist-header">
                     <div class="playlist-img">
@@ -463,69 +466,71 @@
                         <div style="display: flex;justify-content: center;"><i class="fa-regular fa-clock"></i></div>
                     </div>
 
-                    <div class="song-item">
-                        <div class="song-number">1</div>
-                        <div class="play-icon">▶</div>
-                        <div class="song-info">
-                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
-                                alt="Giờ Thì" class="song-thumbnail">
-                            <div class="song-details">
-                                <div class="song-title">Giờ Thì</div>
-                                <div class="song-artist">buitruonglinh</div>
-                            </div>
-                        </div>
-                        <div class="song-album">Từng Ngày Như Mãi Mãi</div>
-                        <div class="song-date">3 thg 6, 2025</div>
-                        <div class="song-duration">
-                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
-                            <span class="duration-time">3:54</span>
-                            <span class="more-button"><i class="fas fa-ellipsis-h"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="song-item">
-                        <div class="song-number">▶</div>
-                        <div class="play-icon">▶</div>
-                        <div class="song-info">
-                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
-                                alt="Vị Nhà" class="song-thumbnail">
-                            <div class="song-details">
-                                <div class="song-title">Vị Nhà</div>
-                                <div class="song-artist">
-                                    <span class="video-badge">📹 Video nhạc</span>
-                                    <span> • Đen</span>
+                    <div class="song-list-container">
+                        <div class="song-item">
+                            <div class="song-number">1</div>
+                            <div class="play-icon">▶</div>
+                            <div class="song-info">
+                                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                    alt="Giờ Thì" class="song-thumbnail">
+                                <div class="song-details">
+                                    <div class="song-title">Giờ Thì</div>
+                                    <div class="song-artist">buitruonglinh</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="song-album">Vị Nhà</div>
-                        <div class="song-date">3 thg 6, 2025</div>
-                        <div class="song-duration">
-                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
-                            <span class="duration-time">4:58</span>
-                            <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="song-item">
-                        <div class="song-number">3</div>
-                        <div class="play-icon">▶</div>
-                        <div class="song-info">
-                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
-                                alt="Nấu ăn cho em" class="song-thumbnail">
-                            <div class="song-details">
-                                <div class="song-title">Nấu ăn cho em</div>
-                                <div class="song-artist">
-                                    <span class="video-badge">📹 Video nhạc</span>
-                                    <span> • Đen, PiaLinh</span>
-                                </div>
+                            <div class="song-album">Từng Ngày Như Mãi Mãi</div>
+                            <div class="song-date">3 thg 6, 2025</div>
+                            <div class="song-duration">
+                                <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                                <span class="duration-time">3:54</span>
+                                <span class="more-button"><i class="fas fa-ellipsis-h"></i></span>
                             </div>
                         </div>
-                        <div class="song-album">Nấu ăn cho em</div>
-                        <div class="song-date">3 thg 6, 2025</div>
-                        <div class="song-duration">
-                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
-                            <span class="duration-time">4:01</span>
-                            <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
+
+                        <div class="song-item">
+                            <div class="song-number">▶</div>
+                            <div class="play-icon">▶</div>
+                            <div class="song-info">
+                                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                    alt="Vị Nhà" class="song-thumbnail">
+                                <div class="song-details">
+                                    <div class="song-title">Vị Nhà</div>
+                                    <div class="song-artist">
+                                        <span class="video-badge">📹 Video nhạc</span>
+                                        <span> • Đen</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="song-album">Vị Nhà</div>
+                            <div class="song-date">3 thg 6, 2025</div>
+                            <div class="song-duration">
+                                <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                                <span class="duration-time">4:58</span>
+                                <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="song-item">
+                            <div class="song-number">3</div>
+                            <div class="play-icon">▶</div>
+                            <div class="song-info">
+                                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                    alt="Nấu ăn cho em" class="song-thumbnail">
+                                <div class="song-details">
+                                    <div class="song-title">Nấu ăn cho em</div>
+                                    <div class="song-artist">
+                                        <span class="video-badge">📹 Video nhạc</span>
+                                        <span> • Đen, PiaLinh</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="song-album">Nấu ăn cho em</div>
+                            <div class="song-date">3 thg 6, 2025</div>
+                            <div class="song-duration">
+                                <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                                <span class="duration-time">4:01</span>
+                                <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
+                            </div>
                         </div>
                     </div>
                 </div>
