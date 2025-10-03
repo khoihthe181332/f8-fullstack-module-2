@@ -92,6 +92,7 @@ function renderArtistPopularTracks(data) {
                         </div>
                     </div>
                     <div class="track-plays">${(track.play_count || 27498341).toLocaleString()}</div>
+                    <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
                     <div class="track-duration">${getTimeProgress(track.duration)}</div>
                     <button class="track-menu-btn">
                         <i class="fas fa-ellipsis-h"></i>

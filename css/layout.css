@@ -443,6 +443,9 @@
     background-color: var(--bg-hover);
 }
 
+.track-item:hover .playing-indicator {
+    opacity: 1;
+}
 .track-number {
     color: var(--text-secondary);
     font-size: 16px;

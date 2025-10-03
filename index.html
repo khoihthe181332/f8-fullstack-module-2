@@ -7,10 +7,13 @@
     <title>F8 - Spotify</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- CSS -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/variables.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/playlist-page.css">
     <link rel="stylesheet" href="css/responsive.css" />
 </head>
 
@@ -418,6 +421,115 @@
                 </section>
             </div>
 
+            <div class="playlist-page hidden">
+                <!-- Playlist Header -->
+                <div class="playlist-header">
+                    <div class="playlist-img">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                            alt="Cover 4">
+                    </div>
+                    <div class="playlist-info">
+                        <div class="playlist-type">Danh sách phát công khai</div>
+                        <h1 class="playlist-title">Khôy</h1>
+                        <div class="playlist-meta">
+                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                alt="Khôy">
+                            <span>Khôy</span>
+                            <span class="meta-separator">•</span>
+                            <span>119 bài hát, khoảng 8 giờ 30 phút</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="playlist-controls">
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-button shuffle-btn"><i class="fa-solid fa-shuffle"></i></button>
+                    <button class="list-button">
+                        Danh sách
+                        <span>☰</span>
+                    </button>
+                </div>
+
+                <!-- Song List -->
+                <div class="song-list">
+                    <div class="song-list-header">
+                        <div>#</div>
+                        <div>Tiêu đề</div>
+                        <div>Album</div>
+                        <div>Ngày thêm</div>
+                        <div style="display: flex;justify-content: center;"><i class="fa-regular fa-clock"></i></div>
+                    </div>
+
+                    <div class="song-item">
+                        <div class="song-number">1</div>
+                        <div class="play-icon">▶</div>
+                        <div class="song-info">
+                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                alt="Giờ Thì" class="song-thumbnail">
+                            <div class="song-details">
+                                <div class="song-title">Giờ Thì</div>
+                                <div class="song-artist">buitruonglinh</div>
+                            </div>
+                        </div>
+                        <div class="song-album">Từng Ngày Như Mãi Mãi</div>
+                        <div class="song-date">3 thg 6, 2025</div>
+                        <div class="song-duration">
+                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                            <span class="duration-time">3:54</span>
+                            <span class="more-button"><i class="fas fa-ellipsis-h"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="song-item">
+                        <div class="song-number">▶</div>
+                        <div class="play-icon">▶</div>
+                        <div class="song-info">
+                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                alt="Vị Nhà" class="song-thumbnail">
+                            <div class="song-details">
+                                <div class="song-title">Vị Nhà</div>
+                                <div class="song-artist">
+                                    <span class="video-badge">📹 Video nhạc</span>
+                                    <span> • Đen</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="song-album">Vị Nhà</div>
+                        <div class="song-date">3 thg 6, 2025</div>
+                        <div class="song-duration">
+                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                            <span class="duration-time">4:58</span>
+                            <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="song-item">
+                        <div class="song-number">3</div>
+                        <div class="play-icon">▶</div>
+                        <div class="song-info">
+                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Zk6hr9GIJ62lo9bjeR2g0rbvaVK4Ls.png"
+                                alt="Nấu ăn cho em" class="song-thumbnail">
+                            <div class="song-details">
+                                <div class="song-title">Nấu ăn cho em</div>
+                                <div class="song-artist">
+                                    <span class="video-badge">📹 Video nhạc</span>
+                                    <span> • Đen, PiaLinh</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="song-album">Nấu ăn cho em</div>
+                        <div class="song-date">3 thg 6, 2025</div>
+                        <div class="song-duration">
+                            <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                            <span class="duration-time">4:01</span>
+                            <span class="more-button"> <i class="fas fa-ellipsis-h"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Bottom Player -->
