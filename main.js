@@ -194,18 +194,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (currentUser) {
-        // Your Library
-        const libraryItems = $$(".library-item");
-        libraryItems.forEach(item => {
-            item.addEventListener("click", (e) => {
-                libraryItems.forEach(otherItem => {
-                    otherItem.classList.remove("active");
-                });
-
-                item.classList.add("active");
-            });
-        });
-
         // Event mở ô tìm kiếm trong your library
         const searchLibraryInput = $(".search-library-input");
         if (searchLibraryInput) {
@@ -323,14 +311,16 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
     // Handle logout button click
-    logoutBtn.addEventListener("click", function () {
+    logoutBtn.addEventListener("click", async function () {
         // Close dropdown first
         userDropdown.classList.remove("show");
 
         // TODO: Students will implement logout logic here
         localStorage.removeItem("accessToken");
         localStorage.removeItem("currentUser");
+        // const res = await httpRequest.get("/auth/logout");
         window.location.reload();
+        // return res;
     });
 
 
