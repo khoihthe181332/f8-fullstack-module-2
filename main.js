@@ -167,12 +167,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // Xử lý lỗi người dùng nhập
         if (!email) {
             formLoginEmail.classList.add("invalid");
+            return;
         } else {
             formLoginEmail.classList.remove("invalid");
         }
 
         if (!password) {
             formLoginPassword.classList.add("invalid");
+            return;
         }
 
         const credentials = {
@@ -181,8 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            const { user, access_token } = await httpRequest.post("/auth/login", credentials);
+            const { user, access_token, refresh_token } = await httpRequest.post("/auth/login", credentials);
             localStorage.setItem("accessToken", access_token);
+            localStorage.setItem("refreshToken", refresh_token);
             localStorage.setItem("currentUser", user.email);
             authModal.classList.remove("show");
             window.location.reload();
@@ -316,11 +319,30 @@ document.addEventListener("DOMContentLoaded", function () {
         userDropdown.classList.remove("show");
 
         // TODO: Students will implement logout logic here
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("currentUser");
-        // const res = await httpRequest.get("/auth/logout");
-        window.location.reload();
-        // return res;
+        try {
+            const refreshToken = localStorage.getItem("refreshToken");
+
+            if (refreshToken) {
+                await httpRequest.post("/auth/logout", {
+                    refresh_token: refreshToken
+                });
+            }
+
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("currentUser");
+            window.location.reload();
+            // return res;
+        } catch (error) {
+            // Lỗi có thể token hết hạn
+            console.error("Logout error:", error);
+
+            // Vẫn xóa dữ liệu local và reload
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("currentUser");
+            window.location.reload();
+        }
     });
 
 
