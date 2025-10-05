@@ -101,19 +101,7 @@ function renderArtistPopularTracks(data) {
     }).join("");
 }
 
-// Toggle view giữa home và artist page
-function toggleView(showArtist) {
-    const contentWrapper = $(".content-wrapper");
-    const artistPage = $(".artist-page");
-
-    if (showArtist) {
-        contentWrapper?.classList.add("hidden");
-        artistPage?.classList.remove("hidden");
-    } else {
-        contentWrapper?.classList.remove("hidden");
-        artistPage?.classList.add("hidden");
-    }
-}
+import { toggleView } from "../main.js";
 
 // GET Artist by ID
 export async function showArtistById(artistId) {
@@ -134,7 +122,7 @@ export async function showArtistById(artistId) {
         window.history.pushState({ view: 'artist', artistId }, '', newUrl);
 
         // Toggle view
-        toggleView(true);
+        toggleView("artist-page");
     } catch (error) {
         console.error("Không tải được thông tin nghệ sĩ:", error);
     }
@@ -163,15 +151,6 @@ export function initArtistCardListeners() {
     });
 }
 
-// Hiển thị trang Home
-export function showHome() {
-    // Cập nhật URL về trang chủ
-    window.history.pushState({ view: 'home' }, '', window.location.pathname);
-
-    // Toggle view về home
-    toggleView(false);
-}
-
 // Xử lý URL parameters khi trang load
 export function handleUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -181,7 +160,7 @@ export function handleUrlParams() {
     if (view === 'artist' && artistId) {
         showArtistById(artistId);
     } else {
-        toggleView(false);
+        toggleView("content-wrapper");
     }
 }
 
@@ -191,7 +170,7 @@ window.addEventListener('popstate', function (e) {
         if (e.state.view === 'artist' && e.state.artistId) {
             showArtistById(e.state.artistId);
         } else {
-            toggleView(false);
+            toggleView("content-wrapper");
         }
     } else {
         handleUrlParams();

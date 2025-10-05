@@ -353,10 +353,10 @@ document.addEventListener("DOMContentLoaded", function () {
 // Import
 import { showTrendingTracks } from "./utils/tracks.js";
 import {
-    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, showHome, followArtist
+    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showMyPlaylist } from "./utils/playlists.js";
+import { showPlaylistsFollowed, showMyPlaylist, showPlaylistById, initPlaylistCardListeners } from "./utils/playlists.js";
 import { showAlbumsFollowed } from "./utils/albums.js";
 
 
@@ -407,6 +407,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Hiển thị nghệ sĩ được chọn
     showArtistById();
     handleUrlParams();
+
+    // Chọn playlist
+    initPlaylistCardListeners();
 });
 
 function updateCurrentUser(user) {
@@ -541,4 +544,34 @@ async function removeAlbum(item) {
         console.error('Error removing album:', error);
         throw error;
     }
+}
+
+// Hàm chuyển tiếp giữa các tab
+export function toggleView(page) {
+    const contentWrapper = $(".content-wrapper");
+    const artistPage = $(".artist-page");
+    const playlistPage = $(".playlist-page");
+
+    if (page === "artist-page") {
+        contentWrapper?.classList.add("hidden");
+        artistPage?.classList.remove("hidden");
+        playlistPage?.classList.add("hidden");
+    } else if (page === "content-wrapper") {
+        contentWrapper?.classList.remove("hidden");
+        artistPage?.classList.add("hidden");
+        playlistPage?.classList.add("hidden");
+    } else if (page === "playlist-page") {
+        contentWrapper?.classList.add("hidden");
+        artistPage?.classList.add("hidden");
+        playlistPage?.classList.remove("hidden");
+    }
+}
+
+// Hiển thị trang Home
+function showHome() {
+    // Cập nhật URL về trang chủ
+    window.history.pushState({ view: 'home' }, '', window.location.pathname);
+
+    // Toggle view về home
+    toggleView("content-wrapper");
 }

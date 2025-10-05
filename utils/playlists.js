@@ -65,15 +65,28 @@ export async function showMyPlaylist() {
     }
 }
 
-function getTimeProgress(duration) {
+function getTotalTimeOfPlaylist(duration) {
     const hour = Math.floor(duration / 3600).toString().padStart(2, "0");
     const min = Math.floor((duration % 3600) / 60).toString().padStart(2, "0");
 
     return `${hour}hour ${min}minutes`;
 }
 
-function renderPlaylist(data) {
+function getTimeProgress(duration) {
+    const min = Math.floor(duration / 60);
+    const sec = String(duration % 60).padStart(2, "0");
+
+    return `${min}:${sec}`
+}
+
+// Render Playlist by ID
+function renderPlaylistById(data) {
     const playlistHeader = $(".playlist-header");
+
+    if (!playlistHeader) {
+        console.error("Playlist hero element not found");
+        return;
+    }
 
     playlistHeader.innerHTML = `<div class="playlist-img">
                         <img src="${data.image_url}"
@@ -87,16 +100,89 @@ function renderPlaylist(data) {
                                 alt="${data.name}">
                             <span>${data.name}</span>
                             <span class="meta-separator">•</span>
-                            <span>${data.total_tracks} songs, about ${getTimeProgress(data.total_duration)}</span>
+                            <span>${data.total_tracks} songs, about ${getTotalTimeOfPlaylist(data.total_duration)}</span>
                         </div>
                     </div>`;
 }
 
-function renderPlaylistTracks(data) {
-    const songListContainer = $(".song-list-container");
+function formatDate(dateString) {
+    const date = new Date(dateString);
 
+    // Format theo locale Tiếng Việt
+    return date.toLocaleDateString('vi-VN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
 }
 
-export async function showDetailPlaylist() {
+function renderPlaylistTracks(data) {
+    const songListContainer = $(".song-list-container");
+    try {
+        const tracks = Array.isArray(data) ? data : (data.tracks || [data]);
 
+        songListContainer.innerHTML = tracks.map((track) => {
+            return `<div class="song-item">
+                            <div class="song-number">${track.position}</div>
+                            <div class="play-icon">▶</div>
+                            <div class="song-info">
+                                <img src="https://spotify.f8team.dev${track.track_image_url}"
+                                    alt="${track.track_title}" class="song-thumbnail">
+                                <div class="song-details">
+                                    <div class="song-title">${track.track_title}</div>
+                                    <div class="song-artist">${track.artist_name}</div>
+                                </div>
+                            </div>
+                            <div class="song-album">${track.album_title}</div>
+                            <div class="song-date">${formatDate(track.added_at)}</div>
+                            <div class="song-duration">
+                                <span class="playing-indicator ${track.playlist_id ? "add" : ""}"><i class="fa-solid ${track.playlist_id ? "fa-circle-check" : "fa-circle-plus"}"></i></span>
+                                <span class="duration-time">${getTimeProgress(track.track_duration)}</span>
+                                <span class="more-button"><i class="fas fa-ellipsis-h"></i></span>
+                            </div>
+                        </div>`
+        }).join("");
+    } catch (error) {
+        console.error("Không thể tải được danh sách bài hát");
+        throw error;
+    }
+}
+
+import { toggleView } from "../main.js";
+
+export async function showPlaylistById(playlistId) {
+    if (!playlistId) {
+        console.error("Playlist ID is required");
+        return;
+    }
+
+    try {
+        const data = await httpRequest.get(`/playlists/${playlistId}`);
+        renderPlaylistById(data);
+
+        const tracksOfPlaylist = await httpRequest.get(`/playlists/${playlistId}/tracks`);
+        renderPlaylistTracks(tracksOfPlaylist);
+
+        // toggle view
+        toggleView("playlist-page");
+    } catch (error) {
+        console.error("Không tải được playlist");
+    }
+}
+
+export function initPlaylistCardListeners() {
+    document.addEventListener("click", (e) => {
+        // Playlist card
+        // ....
+
+        // Playlist - library item
+        const libraryMyPlaylistItem = e.target.closest('.library-item[data-item-type="myPlaylist"]');
+        const libraryFollowedPlaylistItem = e.target.closest(('.library-item[data-item-type="playlist"]'));
+        if (libraryFollowedPlaylistItem || libraryMyPlaylistItem) {
+            const playlistId = libraryMyPlaylistItem.dataset.playlistId ?? libraryFollowedPlaylistItem.dataset.playlistId;
+            if (playlistId) {
+                showPlaylistById(playlistId);
+            }
+        }
+    });
 }

@@ -446,6 +446,11 @@
 .track-item:hover .playing-indicator {
     opacity: 1;
 }
+
+.playing-indicator.add {
+    color: var(--accent-primary);
+}
+
 .track-number {
     color: var(--text-secondary);
     font-size: 16px;
