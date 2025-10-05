@@ -69,7 +69,7 @@ function getTotalTimeOfPlaylist(duration) {
     const hour = Math.floor(duration / 3600).toString().padStart(2, "0");
     const min = Math.floor((duration % 3600) / 60).toString().padStart(2, "0");
 
-    return `${hour}hour ${min}minutes`;
+    return `${hour > 0 ? hour + " hour" : ""} ${min > 0 ? min + " minutes" : ""} `;
 }
 
 function getTimeProgress(duration) {
@@ -163,6 +163,10 @@ export async function showPlaylistById(playlistId) {
         const tracksOfPlaylist = await httpRequest.get(`/playlists/${playlistId}/tracks`);
         renderPlaylistTracks(tracksOfPlaylist);
 
+        // Cập nhập URL
+        const newUrl = `?view=playlist&id=${playlistId}`;
+        window.history.pushState({ view: 'playlist', playlistId }, '', newUrl);
+
         // toggle view
         toggleView("playlist-page");
     } catch (error) {
@@ -186,3 +190,29 @@ export function initPlaylistCardListeners() {
         }
     });
 }
+
+// Xử lý URL parameters khi trang load
+export function handleUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view');
+    const playlistId = urlParams.get('id');
+
+    if (view === 'playlist' && playlistId) {
+        showPlaylistById(playlistId);
+    } else {
+        toggleView("content-wrapper");
+    }
+}
+
+// Event listener cho nút back/forward của browser
+window.addEventListener('popstate', function (e) {
+    if (e.state) {
+        if (e.state.view === 'playlist' && e.state.playlistId) {
+            showPlaylistById(e.state.playlistId);
+        } else {
+            toggleView("content-wrapper");
+        }
+    } else {
+        handleUrlParams();
+    }
+});
