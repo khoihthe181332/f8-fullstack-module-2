@@ -351,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Import
-import { showTrendingTracks, initTrackCardListener } from "./utils/tracks.js";
+import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer } from "./utils/tracks.js";
 import {
     showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
@@ -411,8 +411,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Chọn playlist
     initPlaylistCardListeners();
 
+    // Khởi tạo bài hát
+    initPlayer();
+
     // Chọn bài hát
     initTrackCardListener();
+
+    // Điều chỉnh âm lượng
+    handleVolumeAudio();
+
+    // Điều chỉnh thời lượng bài hát
+    handleProgressAudio();
 });
 
 function updateCurrentUser(user) {
