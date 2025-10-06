@@ -37,6 +37,7 @@ export async function showTrendingTracks() {
 */
 const NEXT = 1;
 const PREV = -1;
+let isLoop = localStorage.getItem("isLoop") || "true";
 // Audio
 const audio = $("#audio-music");
 // Controls button 
@@ -151,6 +152,12 @@ audio.addEventListener("pause", (e) => {
     playBtn.innerHTML = '<i class="fas fa-play"></i>';
 });
 
+audio.addEventListener("ended", (e) => {
+    if (isLoop) {
+        audio.play();
+    }
+});
+
 // Hàm chuyển đổi bài hát
 function swapSong(step) {
 
@@ -165,8 +172,10 @@ playBtn.addEventListener("click", (e) => {
     }
 });
 
-loopBtn.addEventListener("click", e => {
-    
+// Event loop song
+loopBtn.addEventListener("click", (e) => {
+    isLoop = !isLoop;
+    loopBtn.classList.toggle("active", isLoop);
 })
 
 // Hàm điều chỉnh âm lượng
@@ -302,6 +311,17 @@ export function handleProgressAudio() {
         // Lưu progress mỗi giây
         if (Math.floor(audio.currentTime) % 1 === 0) {
             saveProgress();
+        }
+    });
+
+
+    // Audio events - loadedmetadata
+    audio.addEventListener("loadedmetadata", () => {
+        durationTimeEl.textContent = formatTime(audio.duration);
+
+        if (savedProgress && savedProgress > 0) {
+            audio.currentTime = savedProgress;
+            progressFill.style.width = `${(savedProgress / audio.duration) * 100}%`;
         }
     });
 
