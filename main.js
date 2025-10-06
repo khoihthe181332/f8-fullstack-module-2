@@ -428,7 +428,6 @@ function unfollowedLibrary() {
     // Context Menu - Right Click
     document.addEventListener('contextmenu', function (e) {
         const libraryItem = e.target.closest('.library-item');
-        console.log(e.target.dataset.playlistId);
         if (libraryItem && libraryItem.dataset.itemType) {
             e.preventDefault();
             currentContextItem = libraryItem;

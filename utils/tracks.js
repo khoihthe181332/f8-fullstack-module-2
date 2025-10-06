@@ -31,3 +31,8 @@ export async function showTrendingTracks() {
         console.error("Lỗi...");
     }
 }
+
+// PLAYER_MUSIC 
+const NEXT = 1;
+const PREV = -1;
+let currentSong;

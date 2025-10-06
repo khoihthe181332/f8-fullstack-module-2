@@ -87,12 +87,10 @@ function renderArtistPopularTracks(data) {
                         <i class="fas fa-play track-item-play-btn"></i>
                     </div>
                     <div class="track-info">
-                        <div class="track-name">
-                            ${track.title}
-                        </div>
+                        <div class="track-name">${track.title}</div>
                     </div>
                     <div class="track-plays">${(track.play_count || 27498341).toLocaleString()}</div>
-                    <span class="playing-indicator"><i class="fa-solid fa-circle-plus"></i></span>
+                    <span class="playing-indicator ${track.playlist_id ? "add" : ""}"><i class="fa-solid ${track.playlist_id ? "fa-circle-check" : "fa-circle-plus"}"></i></span>
                     <div class="track-duration">${getTimeProgress(track.duration)}</div>
                     <button class="track-menu-btn">
                         <i class="fas fa-ellipsis-h"></i>
