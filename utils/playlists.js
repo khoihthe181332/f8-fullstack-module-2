@@ -122,9 +122,12 @@ function renderPlaylistTracks(data) {
         const tracks = Array.isArray(data) ? data : (data.tracks || [data]);
 
         songListContainer.innerHTML = tracks.map((track) => {
-            return `<div class="song-item">
+            return `<div class="song-item" data-track-id="${track.track_id}" data-item-type="track">
                             <div class="song-number">${track.position}</div>
-                            <div class="play-icon">▶</div>
+                            <div class="play-icon">
+                                <i class="fa-solid fa-play icon-play"></i>
+                                <i class="fa-solid fa-pause icon-pause"></i>
+                            </div>
                             <div class="song-info">
                                 <img src="https://spotify.f8team.dev${track.track_image_url}"
                                     alt="${track.track_title}" class="song-thumbnail">

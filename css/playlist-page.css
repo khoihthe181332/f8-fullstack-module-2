@@ -266,6 +266,35 @@
 .song-item:hover .playing-indicator {
     opacity: 1;
 }
+/* Toggle Play / Pause button */
+.song-item .play-icon .icon-play {
+    display: block;
+}
+.song-item .play-icon .icon-pause {
+    display: none;
+}
+
+.song-item.playing .play-icon .icon-pause {
+    display: block;
+}
+
+.song-item.playing .play-icon .icon-play {
+    display: none;
+}
+/*  */
+
+.song-item.playing .song-title {
+    color: var(--accent-primary);
+}
+
+.song-item.playing .play-icon {
+    color: var(--accent-primary);
+    display: block;
+}
+.song-item.playing .song-number {
+    display: none;
+}
+
 .more-button:hover {
     color: var(--text-primary);
 }
