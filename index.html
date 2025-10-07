@@ -702,7 +702,7 @@
     </div>
 
     <!-- Create playlist modal -->
-    <div class="modal-playlist-overlay">
+    <div class="modal-playlist-overlay show">
         <div class="modal-container">
             <div class="heading">
                 <div class="modal-title">Create New Playlist</div>
@@ -712,38 +712,43 @@
             </div>
 
             <div class="content">
-                <div class="playlist-bgc">
-                    <div class="playlist-overlay">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none"
-                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="playlist-overlay-icon">
-                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                            <path d="m15 5 4 4" />
-                        </svg>
-                        <div class="select-img">Select image</div>
-                    </div>
-                    <div class="playlist-img">
-                        <img src="./placeholder.svg" alt="Playlist image">
-                    </div>
-                </div>
-                <div class="playlist-form">
-                    <form action="" id="playlist-input">
-                        <div id="playlist-title">
-                            <input type="text" class="" id="playlist-title-input" placeholder="Enter playlist name...">
-                            <div class="error-message">
-                                <i class="fas fa-info-circle"></i>
-                                <span>Please enter playlist name</span>
+                <form action="" id="playlist-form">
+                    <main>
+                        <div class="playlist-bgc">
+                            <div class="playlist-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"
+                                    fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="playlist-overlay-icon">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                    <path d="m15 5 4 4" />
+                                </svg>
+                                <div class="select-img">Select image</div>
+                            </div>
+                            <div class="playlist-img">
+                                <img src="./placeholder.svg" alt="Playlist image">
                             </div>
                         </div>
-                        <div id="playlist-description">
-                            <textarea id="playlist-desc-input" placeholder="Enter description (no required)"></textarea>
-                        </div>
-                    </form>
-                </div>
-            </div>
 
-            <div class="footer">
-                <button class="save-playlist">Save</button>
+                        <div class="playlist-input">
+                            <div id="playlist-title">
+                                <input type="text" class="" id="playlist-title-input"
+                                    placeholder="Enter playlist name...">
+                                <div class="error-message">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Please enter playlist name</span>
+                                </div>
+                            </div>
+                            <div id="playlist-description">
+                                <textarea id="playlist-desc-input"
+                                    placeholder="Enter description (no required)"></textarea>
+                            </div>
+                        </div>
+
+                    </main>
+                    <footer>
+                        <button type="submit" class="save-playlist">Save</button>
+                    </footer>
+                </form>
             </div>
         </div>
     </div>

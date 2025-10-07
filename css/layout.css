@@ -565,12 +565,6 @@
 .modal-playlist-overlay .modal-close {
     position: static;
 }
-
-.modal-playlist-overlay .content {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-}
 .modal-playlist-overlay .playlist-img {
     overflow: hidden;
     border-radius: 5px;
@@ -605,16 +599,18 @@
     cursor: pointer;
 }
 
-.modal-playlist-overlay .playlist-form {
-    width: 100%;
-}
-
-.modal-playlist-overlay #playlist-input {
+.modal-playlist-overlay main {
     display: flex;
-    flex-direction: column;
     gap: 15px;
     width: 100%;
     height: 100%;
+}
+
+.modal-playlist-overlay .playlist-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 #playlist-title-input,
@@ -628,12 +624,13 @@
     font-weight: 500;
     transition: all var(--transition-fast);
 }
-#playlist-description {
-    height: 100%;
-}
 
 #playlist-title-input.error {
     outline: 2px solid #f87171;
+}
+
+#playlist-description {
+    flex: 1;
 }
 
 #playlist-desc-input {
@@ -649,9 +646,10 @@
     outline: 1px solid var(--text-secondary);
 }
 
-.modal-playlist-overlay .footer {
+.modal-playlist-overlay footer {
     display: flex;
     justify-content: flex-end;
+    padding-top: 20px;
 }
 
 .save-playlist {

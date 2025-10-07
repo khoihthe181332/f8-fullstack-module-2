@@ -129,7 +129,7 @@ function renderPlaylistTracks(data) {
                                 <i class="fa-solid fa-pause icon-pause"></i>
                             </div>
                             <div class="song-info">
-                                <img src="https://spotify.f8team.dev${track.track_image_url}"
+                                <img src="${track.track_image_url}"
                                     alt="${track.track_title}" class="song-thumbnail">
                                 <div class="song-details">
                                     <div class="song-title">${track.track_title}</div>
@@ -223,10 +223,12 @@ window.addEventListener('popstate', function (e) {
 /** 
  * Tạo playlist
  */
-$(".create-btn").addEventListener("click", (e) => {
-    
-})
-
 export async function createPlaylist() {
 
 }
+
+const playlistCreateForm = $("#playlist-form");
+playlistCreateForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    console.log(123);
+});
