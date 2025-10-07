@@ -223,12 +223,75 @@ window.addEventListener('popstate', function (e) {
 /** 
  * Tạo playlist
  */
-export async function createPlaylist() {
-
+export async function createPlaylist(playlistData) {
+    try {
+        const response = await httpRequest.post('/playlists', playlistData);
+        return response;
+    } catch (error) {
+        console.error('Error creating playlist:', error);
+        throw error;
+    }
 }
+
+// Xử lý chọn ảnh
+const playlistOverlay = $(".playlist-overlay");
+const playlistImg = $(".playlist-img img");
+
+// Click vào overlay để chọn ảnh
+playlistOverlay.addEventListener("click", function () {
+
+});
+
+// Xử lý khi chọn file
+// ....
 
 const playlistCreateForm = $("#playlist-form");
 playlistCreateForm.addEventListener("submit", async function (e) {
     e.preventDefault();
-    console.log(123);
+
+    // Lấy giá trị từ form
+    const playlistName = $("#playlist-title-input").value.trim();
+    const playlistDesc = $("#playlist-desc-input").value.trim();
+    const errorMessage = $(".error-message");
+
+    // Validate tên playlist
+    if (!playlistName) {
+        errorMessage.style.display = "flex";
+        $("#playlist-title-input").classList.add("error");
+        return;
+    } else {
+        errorMessage.style.display = "none";
+        $("#playlist-title-input").classList.remove("error");
+    }
+
+    // Chuẩn bị dữ liệu
+    const playlistData = {
+        name: playlistName,
+        description: playlistDesc || "Playlist description",
+        is_public: true,
+        image_url: "https://tse4.mm.bing.net/th/id/OIP.Lpgm30caiYmI_rJA5KZuGAHaEo?pid=Api&P=0&h=220"
+    };
+
+    try {
+        // Gọi API tạo playlist
+        const result = await createPlaylist(playlistData);
+
+        // Thành công - đóng modal và reset form
+        console.log('Playlist created successfully:', result);
+        playlistCreateForm.reset();
+        $(".modal-playlist-overlay").classList.remove("show");
+
+        await showMyPlaylist();
+    } catch (error) {
+        // Xử lý lỗi
+        console.error('Failed to create playlist:', error);
+        alert('Failed to create playlist. Please try again.');
+    }
+});
+
+// Reset form khi đóng modal
+$("#modalClose").addEventListener("click", function () {
+    playlistCreateForm.reset();
+    document.querySelector(".error-message").style.display = "none";
+    $("#playlist-title-input").classList.remove("error");
 });
