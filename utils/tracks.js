@@ -118,7 +118,7 @@ async function showTrackPlaying(e) {
         renderTrackPlayingById(data);
         currentSong = trackId;
         localStorage.setItem("currentSong", trackId);
-        await audio.play();
+        audio.play();
     } catch (error) {
         console.error("Không thể phát bài hát:", error);
         throw error;
@@ -176,6 +176,8 @@ playBtn.addEventListener("click", (e) => {
 loopBtn.addEventListener("click", (e) => {
     isLoop = !isLoop;
     loopBtn.classList.toggle("active", isLoop);
+
+    localStorage.setItem("isLoop", isLoop);
 })
 
 // Hàm điều chỉnh âm lượng
@@ -281,13 +283,12 @@ export function handleVolumeAudio() {
 export function handleProgressAudio() {
     const progressFill = $(".progress-fill");
     const progressBar = $(".progress-bar");
-    const timeElements = $$(".progress-container .time");
-    const [currentTimeEl, durationTimeEl] = timeElements;
+    const timeStart = $(".time-start");
+    const timeEnd = $(".time-end");
 
-    let savedProgress = Number(localStorage.getItem("audioProgress"));
-    let isDragging = false;
+    let isSeeking = false; // Kiểm tra xem có đang tua không ?
 
-    // Format time
+    // Hàm định dạng thời gian 
     const formatTime = (seconds) => {
         if (isNaN(seconds)) return "0:00";
         const mins = Math.floor(seconds / 60);
@@ -295,82 +296,80 @@ export function handleProgressAudio() {
         return `${mins}:${secs}`;
     };
 
-    // Hàm lưu progress vào localStorage
-    function saveProgress() {
-        localStorage.setItem("audioProgress", audio.currentTime);
+    // Hàm cập nhật thời lượng
+    const updateProgressSong = (currentTime, duration) => {
+        if (!duration) return;
+
+        const progressPercent = Math.floor((currentTime / duration) * 100);
+        progressFill.style.width = `${progressPercent}%`;
     }
 
-    // Audio events - timeupdate
-    audio.addEventListener("timeupdate", () => {
-        if (isDragging) return; // Không cập nhật khi đang drag
+    // Hàm xử lý tua bài hát
+    const seekToPosition = (e) => {
+        if (!audio.duration) return;
 
-        const percent = audio.currentTime / audio.duration;
-        progressFill.style.width = `${percent * 100}%`;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
+        const progressBarRect = progressBar.getBoundingClientRect();
+        const clickX = e.clientX - progressBarRect.left;
+        const progressBarWidth = progressBarRect.width;
 
-        // Lưu progress mỗi giây
-        if (Math.floor(audio.currentTime) % 1 === 0) {
-            saveProgress();
+        // Tính phần trăm vị trí click
+        const seekPercent = Math.max(0, Math.min(100, (clickX / progressBarWidth) * 100));
+
+        // Tính thời gian cần tua đến
+        const seekTime = (seekPercent / 100) * audio.duration;
+
+        // Cập nhật thời gian của audio
+        audio.currentTime = seekTime;
+
+        // Cập nhật giao diện ngay lập tức
+        updateProgressSong(seekTime, audio.duration);
+        if (timeStart) {
+            timeStart.textContent = formatTime(seekTime);
         }
-    });
+    };
 
+    // Nghe sự kiện click vào thanh progress
+    if (progressBar) {
+        progressBar.addEventListener("click", seekToPosition);
+    }
 
-    // Audio events - loadedmetadata
-    audio.addEventListener("loadedmetadata", () => {
-        durationTimeEl.textContent = formatTime(audio.duration);
+    // Xử lý kéo thả (drag) thanh progress
+    if (progressBar) {
+        progressBar.addEventListener("mousedown", (e) => {
+            isSeeking = true;
+            seekToPosition(e);
 
-        if (savedProgress && savedProgress > 0) {
-            audio.currentTime = savedProgress;
-            progressFill.style.width = `${(savedProgress / audio.duration) * 100}%`;
+            const onMouseMove = (e) => {
+                if (isSeeking) {
+                    seekToPosition(e);
+                }
+            };
+
+            const onMouseUp = () => {
+                isSeeking = false;
+                document.removeEventListener("mousemove", onMouseMove);
+                document.removeEventListener("mouseup", onMouseUp);
+            };
+
+            document.addEventListener("mousemove", onMouseMove);
+            document.addEventListener("mouseup", onMouseUp);
+        });
+    }
+
+    // Nghe sự kiện bài hát "đang phát"
+    audio.addEventListener("timeupdate", e => {
+        const { currentTime, duration } = audio;
+        if (!duration || isSeeking) return;
+
+        // Cập nhật thanh tiến trình
+        updateProgressSong(currentTime, duration);
+
+        // Cập nhật hiển thị thời gian
+        if (timeStart) {
+            timeStart.textContent = formatTime(currentTime);
         }
-    });
-
-    // Lưu progress khi pause
-    audio.addEventListener("pause", saveProgress);
-
-    // Xóa progress khi bài hát kết thúc
-    audio.addEventListener("ended", () => {
-        localStorage.removeItem("audioProgress");
-    });
-
-    // Lưu trước khi đóng trang
-    window.addEventListener("beforeunload", saveProgress);
-
-    // Click vào progress bar để seek
-    progressBar.addEventListener("click", (e) => {
-        const rect = progressBar.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const percent = Math.max(0, Math.min(1, clickX / rect.width));
-
-        audio.currentTime = percent * audio.duration;
-        progressFill.style.width = `${percent * 100}%`;
-        saveProgress();
-    });
-
-    // Drag progress handle
-    const progressHandle = $(".progress-handle");
-
-    progressHandle.addEventListener("mousedown", (e) => {
-        isDragging = true;
-        e.preventDefault();
-    });
-
-    document.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-
-        const rect = progressBar.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const percent = Math.max(0, Math.min(1, clickX / rect.width));
-
-        audio.currentTime = percent * audio.duration;
-        progressFill.style.width = `${percent * 100}%`;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
-
-    document.addEventListener("mouseup", () => {
-        if (isDragging) {
-            isDragging = false;
-            saveProgress();
+        if (timeEnd) {
+            timeEnd.textContent = formatTime(duration);
         }
     });
 }
