@@ -86,6 +86,34 @@ document.addEventListener("DOMContentLoaded", function () {
         showSignupForm();
     });
 
+
+    const playlistModal = document.querySelector(".modal-playlist-overlay");
+    const closePlaylistModalBtn = playlistModal.querySelector("#modalClose");
+    const playlistModalContainer = playlistModal.querySelector(".modal-container");
+
+    // Open Playlist Modal
+    $(".create-btn").addEventListener("click", function () {
+        showPlaylistModal();
+    });
+
+    function showPlaylistModal() {
+        playlistModal.classList.add("show");
+        document.body.style.overflow = "hidden"; // Prevent background scrolling
+    }
+
+    closePlaylistModalBtn.addEventListener("click", closePlaylistModal);
+    playlistModal.addEventListener("click", closePlaylistModal);
+
+    function closePlaylistModal() {
+        playlistModal.classList.remove("show");
+        document.body.style.overflow = "auto"; // Restore scrolling
+    }
+
+    playlistModalContainer.addEventListener("click", (e) => {
+        e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt lên overlay
+    });
+
+
     // Xử lý người dùng xem được mật khẩu 
     (function togglePassword() {
         const togglePasswordBtns = $$(".toggle-password");
