@@ -219,3 +219,14 @@ window.addEventListener('popstate', function (e) {
         handleUrlParams();
     }
 });
+
+/** 
+ * Tạo playlist
+ */
+$(".create-btn").addEventListener("click", (e) => {
+    
+})
+
+export async function createPlaylist() {
+
+}

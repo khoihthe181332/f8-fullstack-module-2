@@ -525,3 +525,144 @@
         display: none;
     }
 }
+
+/* Create Playlist Modal */
+.modal-playlist-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal);
+    backdrop-filter: blur(4px);
+}
+
+.modal-playlist-overlay .modal-container {
+    padding: 20px 25px;
+    max-width: 550px;
+}
+
+.modal-playlist-overlay .heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-playlist-overlay .modal-close {
+    position: static;
+}
+
+.modal-playlist-overlay .content {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.modal-playlist-overlay .playlist-img {
+    overflow: hidden;
+    border-radius: 5px;
+}
+.modal-playlist-overlay .playlist-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-bgc {
+    position: relative;
+}
+
+.playlist-bgc .playlist-img {
+    width: 195px;
+    height: 195px;
+}
+
+.playlist-bgc:hover .playlist-overlay {
+    display: flex;
+}
+
+.playlist-overlay {
+    position: absolute;
+    background-color: #00000080;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.modal-playlist-overlay .playlist-form {
+    width: 100%;
+}
+
+.modal-playlist-overlay #playlist-input {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+#playlist-title-input,
+#playlist-desc-input {
+    width: 100%;
+    padding: 10px 13px;
+    border-radius: var(--radius-sm);
+    background-color: var(--border-color);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+#playlist-description {
+    height: 100%;
+}
+
+#playlist-title-input.error {
+    outline: 2px solid #f87171;
+}
+
+#playlist-desc-input {
+    height: 100%;
+    resize: none;
+    outline: none;
+    border: none;
+    font-family: inherit;
+}
+
+#playlist-title-input:focus,
+#playlist-desc-input:focus {
+    outline: 1px solid var(--text-secondary);
+}
+
+.modal-playlist-overlay .footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-playlist {
+    padding: 10px 32px;
+    border: none;
+    border-radius: 500px;
+    background-color: #fff;
+    color: var(--bg-primary);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.save-playlist:hover {
+    background-color: #e6e6e6;
+    transform: scale(1.04);
+}
