@@ -427,6 +427,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         unfollowedLibrary();
 
         initDeletePlaylistButton();
+
+        // Update playlist
+        initUpdatePlaylist();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
@@ -671,10 +674,6 @@ function initDeletePlaylistButton() {
             if (!confirmed) return;
 
             try {
-                // Disable button và hiển thị loading
-                deletePlaylistBtn.disabled = true;
-                deletePlaylistBtn.textContent = "Đang xóa...";
-
                 // Gọi API xóa playlist (sử dụng hàm deletePlaylist chung)
                 await deletePlaylist({});
 
@@ -702,10 +701,6 @@ function initDeletePlaylistButton() {
             } catch (error) {
                 console.error('Error deleting playlist:', error);
                 alert("Không thể xóa playlist. Vui lòng thử lại!");
-
-                // Reset button
-                deletePlaylistBtn.disabled = false;
-                deletePlaylistBtn.textContent = "Xóa playlist";
             }
         });
     }
