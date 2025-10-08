@@ -178,7 +178,7 @@ export async function showPlaylistById(playlistId) {
 }
 
 export function initPlaylistCardListeners() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", async (e) => {
         // Playlist card
         // ....
 
@@ -188,7 +188,8 @@ export function initPlaylistCardListeners() {
         if (libraryFollowedPlaylistItem || libraryMyPlaylistItem) {
             const playlistId = libraryMyPlaylistItem.dataset.playlistId ?? libraryFollowedPlaylistItem.dataset.playlistId;
             if (playlistId) {
-                showPlaylistById(playlistId);
+                await showPlaylistById(playlistId);
+                localStorage.setItem("playlistId", playlistId);
             }
         }
     });

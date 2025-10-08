@@ -343,6 +343,10 @@ document.addEventListener("DOMContentLoaded", function () {
         showHome();
     })
 
+    document.querySelector(".logo").addEventListener("click", () => {
+        showHome();
+    })
+
     // Handle logout button click
     logoutBtn.addEventListener("click", async function () {
         // Close dropdown first
@@ -421,6 +425,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Unfollowed
         unfollowedLibrary();
+
+        initDeletePlaylistButton();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
@@ -459,11 +465,12 @@ function updateCurrentUser(user) {
     }
 }
 
-let currentContextItem = null;
-
 function unfollowedLibrary() {
     const contextMenu = $('#contextMenu');
     const unfollowItem = $('#unfollowItem');
+    let currentContextItem = null;
+
+    if (!contextMenu || !unfollowItem) return;
 
     // Context Menu - Right Click
     document.addEventListener('contextmenu', function (e) {
@@ -482,6 +489,7 @@ function unfollowedLibrary() {
     document.addEventListener('click', function (e) {
         if (!contextMenu.contains(e.target)) {
             contextMenu.classList.remove('show');
+            currentContextItem = null;
         }
     });
 
@@ -490,21 +498,37 @@ function unfollowedLibrary() {
         if (!currentContextItem) return;
 
         const itemType = currentContextItem.dataset.itemType;
-        const itemToRemove = currentContextItem; // Lưu reference trước khi xóa
+        const itemToRemove = currentContextItem;
 
         // Đóng context menu ngay lập tức
         contextMenu.classList.remove('show');
 
+        // Confirm trước khi xóa
+        const confirmed = confirm('Bạn có chắc chắn muốn xóa?');
+        if (!confirmed) {
+            currentContextItem = null;
+            return;
+        }
+
         try {
             let result;
-            if (itemType === 'artist') {
-                result = await unfollowArtist(itemToRemove);
-            } else if (itemType === 'myPlaylist') {
-                result = await deletePlaylist(itemToRemove);
-            } else if (itemType === 'playlist') {
-                result = await removePlaylist(itemToRemove);
-            } else if (itemType === 'album') {
-                result = await removeAlbum(itemToRemove);
+
+            // Sử dụng các hàm API tương ứng
+            switch (itemType) {
+                case 'artist':
+                    result = await unfollowArtist(itemToRemove);
+                    break;
+                case 'myPlaylist':
+                    result = await deletePlaylist(itemToRemove);
+                    break;
+                case 'playlist':
+                    result = await removePlaylist(itemToRemove);
+                    break;
+                case 'album':
+                    result = await removeAlbum(itemToRemove);
+                    break;
+                default:
+                    throw new Error('Invalid item type');
             }
 
             // Nếu API thành công, xóa phần tử khỏi DOM với animation
@@ -520,8 +544,7 @@ function unfollowedLibrary() {
             }
         } catch (error) {
             console.error('Error unfollowing item:', error);
-            // Có thể hiển thị thông báo lỗi cho user
-            alert(`Không thể xóa ${itemType} Vui lòng thử lại!`);
+            alert(`Không thể xóa. Vui lòng thử lại!`);
         } finally {
             currentContextItem = null;
         }
@@ -566,7 +589,12 @@ async function removePlaylist(item) {
 }
 
 async function deletePlaylist(item) {
-    const playlistId = item.dataset.playlistId;
+    const playlistId = item.dataset?.playlistId || localStorage.getItem("playlistId");
+
+    if (!playlistId) {
+        throw new Error("Không tìm thấy playlist ID");
+    }
+
     try {
         return await httpRequest.del(`/playlists/${playlistId}`);
     } catch (error) {
@@ -613,4 +641,79 @@ function showHome() {
 
     // Toggle view về home
     toggleView("content-wrapper");
+}
+
+// Hàm xóa Playlist trong Playlist Detail
+function initDeletePlaylistButton() {
+    const morePlaylistBtn = $(".more-playlist-btn");
+    const menuPlaylist = $(".more-playlist");
+
+    if (!morePlaylistBtn || !menuPlaylist) return;
+
+    // Toggle menu khi click vào nút more
+    morePlaylistBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menuPlaylist.classList.toggle("show");
+    });
+
+    // Xử lý click vào nút Delete trong menu
+    const deletePlaylistBtn = menuPlaylist.querySelector(".delete-playlist-btn");
+
+    if (deletePlaylistBtn) {
+        deletePlaylistBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            // Đóng menu
+            menuPlaylist.classList.remove("show");
+
+            // Confirm trước khi xóa
+            const confirmed = confirm("Bạn có chắc chắn muốn xóa playlist này?");
+            if (!confirmed) return;
+
+            try {
+                // Disable button và hiển thị loading
+                deletePlaylistBtn.disabled = true;
+                deletePlaylistBtn.textContent = "Đang xóa...";
+
+                // Gọi API xóa playlist (sử dụng hàm deletePlaylist chung)
+                await deletePlaylist({});
+
+                // Tìm playlist item trong library để xóa khỏi DOM
+                const playlistId = localStorage.getItem("playlistId");
+                const playlistItem = $(`.library-item[data-playlist-id="${playlistId}"]`);
+
+                if (playlistItem) {
+                    // Animation xóa 
+                    playlistItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    playlistItem.style.opacity = '0';
+                    playlistItem.style.transform = 'translateX(-20px)';
+
+                    // Xóa phần tử sau khi animation hoàn thành
+                    setTimeout(() => {
+                        playlistItem.remove();
+                        localStorage.removeItem("playlistId");
+                        // Chuyển hướng về trang Home sau khi xóa
+                        showHome();
+                    }, 300);
+                } else {
+                    // Nếu không tìm thấy element, huyển hướng về trang Home luôn
+                    showHome();
+                }
+            } catch (error) {
+                console.error('Error deleting playlist:', error);
+                alert("Không thể xóa playlist. Vui lòng thử lại!");
+
+                // Reset button
+                deletePlaylistBtn.disabled = false;
+                deletePlaylistBtn.textContent = "Xóa playlist";
+            }
+        });
+    }
+
+    // Đóng menu khi click ra ngoài
+    document.addEventListener("click", (e) => {
+        if (!menuPlaylist.contains(e.target) && !morePlaylistBtn.contains(e.target)) {
+            menuPlaylist.classList.remove("show");
+        }
+    });
 }
