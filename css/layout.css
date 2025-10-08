@@ -445,19 +445,23 @@
     color: var(--accent-primary);
 }
 
-.track-item.playing .fa-play {
+.track-item.playing .fa-play,
+.track-item.playing .track-number {
     display: none;
 }
 
-.track-item .fa-pause {
+.track-item .fa-pause,
+.track-item .track-playing {
     display: none;
 }
 
-.track-item.playing .fa-pause {
+.track-item.playing .fa-pause,
+.track-item.playing .track-playing {
     display: block;
 }
 
-.track-item.playing .track-name {
+.track-item.playing .track-name,
+.track-item.playing .track-playing {
     color: var(--accent-primary);
 }
 

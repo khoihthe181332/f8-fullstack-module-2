@@ -82,6 +82,7 @@ function renderArtistPopularTracks(data) {
     trackList.innerHTML = tracks.map((track, index) => {
         return `<div class="track-item" data-track-id="${track.id}">
                     <div class="track-number">${index + 1}</div>
+                    <div class="track-playing"><i class="fa-solid fa-chart-simple"></i></div>
                     <div class="track-image">
                         <img src="${track.image_url}" alt="${track.title}" />
                         <i class="fas fa-play track-item-play-btn"></i>
