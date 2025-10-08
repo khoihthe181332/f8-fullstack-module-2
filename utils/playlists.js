@@ -236,10 +236,11 @@ export async function createPlaylist(playlistData) {
 // Xử lý chọn ảnh
 const playlistOverlay = $(".playlist-overlay");
 const playlistImg = $(".playlist-img img");
+const fileInput = $("#file-input");
 
 // Click vào overlay để chọn ảnh
 playlistOverlay.addEventListener("click", function () {
-
+    fileInput.click();
 });
 
 // Xử lý khi chọn file
