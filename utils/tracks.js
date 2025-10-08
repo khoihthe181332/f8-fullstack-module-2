@@ -183,7 +183,7 @@ function swapSong(step) {
 
 }
 
-// Event play / pause song
+// Event phát / dừng bài hát
 playBtn.addEventListener("click", (e) => {
     if (audio.paused) {
         audio.play();
@@ -192,7 +192,7 @@ playBtn.addEventListener("click", (e) => {
     }
 });
 
-// Event loop song
+// Event phát lại bài hát
 loopBtn.addEventListener("click", (e) => {
     isLoop = !isLoop;
     loopBtn.classList.toggle("active", isLoop);
@@ -200,6 +200,7 @@ loopBtn.addEventListener("click", (e) => {
     localStorage.setItem("isLoop", isLoop);
 });
 
+// Event trộn bài hát
 shuffleBtn.addEventListener("click", e => {
     isShuffle = !isShuffle;
     shuffleBtn.classList.toggle("active", isShuffle);
