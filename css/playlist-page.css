@@ -108,7 +108,7 @@
 }
 
 .control-button:hover {
-    color: var(--text-primary);
+    scale: 1.04;
 }
 
 .list-button {

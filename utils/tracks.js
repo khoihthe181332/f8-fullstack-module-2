@@ -38,6 +38,7 @@ export async function showTrendingTracks() {
 const NEXT = 1;
 const PREV = -1;
 let isLoop = localStorage.getItem("isLoop") || "true";
+let isShuffle = localStorage.getItem("isShuffle") || "true";
 // Audio
 const audio = $("#audio-music");
 // Controls button 
@@ -178,6 +179,13 @@ loopBtn.addEventListener("click", (e) => {
     loopBtn.classList.toggle("active", isLoop);
 
     localStorage.setItem("isLoop", isLoop);
+});
+
+shuffleBtn.addEventListener("click", e => {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle("active", isShuffle);
+
+    localStorage.setItem("isShuffle", isShuffle);
 })
 
 // Hàm điều chỉnh âm lượng

@@ -625,7 +625,8 @@
     font-size: 16px;
 }
 
-.control-btn.active {
+.control-btn.active,
+.control-button.active {
     color: var(--accent-primary);
 }
 
