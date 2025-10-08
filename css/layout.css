@@ -439,6 +439,24 @@
     cursor: pointer;
 }
 
+.track-item.playing .track-item-play-btn {
+    opacity: 1;
+    visibility: visible;
+    color: var(--accent-primary);
+}
+
+.track-item.playing .fa-play {
+    display: none;
+}
+
+.track-item .fa-pause {
+    display: none;
+}
+
+.track-item.playing .fa-pause {
+    display: block;
+}
+
 .track-item:hover {
     background-color: var(--bg-hover);
 }

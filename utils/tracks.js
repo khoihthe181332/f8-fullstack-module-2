@@ -51,12 +51,12 @@ const playBtn = $(".play-btn");
 let currentSong = localStorage.getItem("currentSong");
 
 export function initTrackCardListener() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", async (e) => {
         // Chọn Track Card
         const playHitBtn = e.target.closest(".hit-play-btn");
         if (playHitBtn) {
             e.preventDefault();
-            showTrackPlaying(e);
+            await showTrackPlaying(e);
         }
 
         // Chọn nhạc trong playlist
@@ -74,7 +74,25 @@ export function initTrackCardListener() {
 
                 // Sau đó mới add playing cho bài hiện tại
                 songItem.classList.add("playing");
-                showTrackPlaying(e);
+                await showTrackPlaying(e);
+            }
+        }
+
+        // Chọn nhạc trong Danh sách Artist
+        const trackItem = e.target.closest(".track-item");
+        if (trackItem) {
+            e.preventDefault();
+
+            if (trackItem.classList.contains("playing")) {
+                trackItem.classList.remove("playing");
+            } else {
+                const allTracks = $$(".track-item");
+                allTracks.forEach(track => {
+                    track.classList.remove("playing");
+                });
+
+                trackItem.classList.add("playing");
+                await showTrackPlaying(e)
             }
         }
     });
@@ -103,7 +121,8 @@ async function showTrackPlaying(e) {
         // Nếu có event (user click), lấy từ element
         const hitCard = e.target.closest(".hit-card");
         const songItem = e.target.closest(".song-item");
-        trackId = hitCard?.dataset.trackId ?? songItem?.dataset.trackId;
+        const trackItem = e.target.closest(".track-item");
+        trackId = hitCard?.dataset.trackId ?? songItem?.dataset.trackId ?? trackItem?.dataset.trackId;
     } else {
         // Nếu không có event (load từ localStorage), lấy từ storage
         trackId = localStorage.getItem("currentSong");
