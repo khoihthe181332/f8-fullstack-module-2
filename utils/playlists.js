@@ -297,3 +297,59 @@ $("#modalClose").addEventListener("click", function () {
     document.querySelector(".error-message").style.display = "none";
     $("#playlist-title-input").classList.remove("error");
 });
+
+// Hàm update Playlist 
+export function initUpdatePlaylist() {
+    const playlistModal = $("#edit-playlist-modal");
+    const form = playlistModal.querySelector("#edit-playlist-form");
+    const imgInput = playlistModal.querySelector(".playlist-img img");
+    const nameInput = playlistModal.querySelector("#edit-playlist-title-input");
+
+    let cacheData = null;
+
+    const updatePlaylistBtn = document.querySelector(".update-playlist-btn");
+    if (updatePlaylistBtn) {
+        // Mở modal update playlist
+        updatePlaylistBtn.addEventListener("click", async (e) => {
+            playlistModal.classList.add("show");
+            const playlistId = localStorage.getItem("playlistId");
+            try {
+                cacheData = await httpRequest.get(`/playlists/${playlistId}`);
+                imgInput.src = cacheData.image_url;
+                nameInput.value = cacheData.name;
+            } catch (error) {
+                alert("Không thể lấy thông tin của playlist");
+                throw error;
+            }
+        });
+    };
+
+    let newPlaylistName = null;
+    let newPlaylistImage = null;
+
+    // Cập nhật tên playlist mới
+    nameInput.addEventListener("change", (e) => {
+        newPlaylistName = nameInput.value.trim();
+    });
+
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+        const playlistId = localStorage.getItem("playlistId");
+        if (playlistId) {
+            try {
+                const data = await httpRequest.put(`/playlists/${playlistId}`, {
+                    name: newPlaylistName,
+                    image_url: newPlaylistImage || cacheData.image_url
+                });
+
+                await Promise.all([showMyPlaylist(), showPlaylistById()])
+
+                playlistModal.classList.remove("show");
+                return data;
+            } catch (error) {
+                alert(`Không thể cập nhật thông tin của playlist ${nameInput}`);
+                throw error;
+            }
+        }
+    });
+}

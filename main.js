@@ -87,11 +87,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    const playlistModal = document.querySelector(".modal-playlist-overlay");
+    // Đóng / Mở Create Playlist Modal
+    const playlistModal = document.querySelector("#create-playlist-modal");
     const closePlaylistModalBtn = playlistModal.querySelector("#modalClose");
     const playlistModalContainer = playlistModal.querySelector(".modal-container");
 
-    // Open Playlist Modal
     $(".create-btn").addEventListener("click", function () {
         showPlaylistModal();
     });
@@ -113,6 +113,23 @@ document.addEventListener("DOMContentLoaded", function () {
         e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt lên overlay
     });
 
+
+    // Đóng Update Playlist Modal
+    const updatePlaylistModal = $("#edit-playlist-modal");
+    const closeUpdatePlaylistModalBtn = updatePlaylistModal.querySelector("#editModalClose");
+    const updatePlaylistModalContainer = updatePlaylistModal.querySelector(".modal-container");
+
+    closeUpdatePlaylistModalBtn.addEventListener("click", closeUpdatePlaylistModal);
+    updatePlaylistModal.addEventListener("click", closeUpdatePlaylistModal);
+
+    function closeUpdatePlaylistModal() {
+        updatePlaylistModal.classList.remove("show");
+        document.body.style.overflow = "auto"; // Restore scrolling
+    }
+
+    updatePlaylistModalContainer.addEventListener("click", (e) => {
+        e.stopPropagation();
+    });
 
     // Xử lý người dùng xem được mật khẩu 
     (function togglePassword() {
@@ -388,7 +405,7 @@ import {
     showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showMyPlaylist, showPlaylistById, initPlaylistCardListeners } from "./utils/playlists.js";
+import { showPlaylistsFollowed, showMyPlaylist, showPlaylistById, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
 import { showAlbumsFollowed } from "./utils/albums.js";
 
 

@@ -715,10 +715,10 @@
     </div>
 
     <!-- Create playlist modal -->
-    <div class="modal-playlist-overlay">
+    <div class="modal-playlist-overlay" id="create-playlist-modal">
         <div class="modal-container">
             <div class="heading">
-                <div class="modal-title">Create / Edit Playlist</div>
+                <div class="modal-title">Create Playlist</div>
                 <button class="modal-close" id="modalClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -754,6 +754,59 @@
                             </div>
                             <div id="playlist-description">
                                 <textarea id="playlist-desc-input"
+                                    placeholder="Enter description (no required)"></textarea>
+                            </div>
+                        </div>
+
+                    </main>
+                    <footer>
+                        <button type="submit" class="save-playlist">Save</button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit playlist modal -->
+    <div class="modal-playlist-overlay" id="edit-playlist-modal">
+        <div class="modal-container">
+            <div class="heading">
+                <div class="modal-title">Update Playlist</div>
+                <button class="modal-close" id="editModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="content">
+                <form action="" id="edit-playlist-form" autocomplete="off">
+                    <main>
+                        <div class="playlist-bgc">
+                            <div class="playlist-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"
+                                    fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="playlist-overlay-icon">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                    <path d="m15 5 4 4" />
+                                </svg>
+                                <div class="select-img">Select image</div>
+                            </div>
+                            <div class="playlist-img">
+                                <input type="file" id="edit-file-input" accept="image/*" style="display: none;">
+                                <img src="./placeholder.svg" alt="Playlist image">
+                            </div>
+                        </div>
+
+                        <div class="playlist-input">
+                            <div id="edit-playlist-title">
+                                <input type="text" class="" id="edit-playlist-title-input"
+                                    placeholder="Enter playlist name...">
+                                <div class="error-message">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Please enter playlist name</span>
+                                </div>
+                            </div>
+                            <div id="edit-playlist-description">
+                                <textarea id="edit-playlist-desc-input"
                                     placeholder="Enter description (no required)"></textarea>
                             </div>
                         </div>
