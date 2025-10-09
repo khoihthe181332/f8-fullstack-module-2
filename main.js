@@ -131,6 +131,23 @@ document.addEventListener("DOMContentLoaded", function () {
         e.stopPropagation();
     });
 
+    // Đóng popup playlist
+    const popupPlaylist = $(".popup-playlist-overlay");
+    const popupPlaylistContainer = $(".popup-playlist-container");
+    const closePopup = $(".close-popup");
+
+    function closePopupPlaylist() {
+        popupPlaylist.classList.remove("show");
+        document.body.style.overflow = "auto"; // Restore scrolling
+    }
+
+    popupPlaylist.addEventListener("click", closePopupPlaylist);
+    closePopup.addEventListener("click", closePopupPlaylist);
+
+    popupPlaylistContainer.addEventListener("click", (e) => {
+        e.stopPropagation();
+    });
+
     // Xử lý người dùng xem được mật khẩu 
     (function togglePassword() {
         const togglePasswordBtns = $$(".toggle-password");
@@ -400,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Import
-import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer } from "./utils/tracks.js";
+import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer, initAddTrackToPlaylist } from "./utils/tracks.js";
 import {
     showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
@@ -447,6 +464,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Update playlist
         initUpdatePlaylist();
+
+        // Add track to playlist
+        initAddTrackToPlaylist();
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay

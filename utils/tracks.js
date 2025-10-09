@@ -32,8 +32,86 @@ export async function showTrendingTracks() {
     }
 }
 
-// Add Track to Playlist
+// Render Playlist in Popup to add Track
+function renderPlaylistToAdd(data) {
+    const wrapper = $(".popup-playlist-container .item-wrapper");
+    wrapper.innerHTML = data.map(data => {
+        return `<div class="popup-item" data-item-type="myPlaylist" data-playlist-id="${data.id}">
+                    ${data.name === "Liked Songs"
+                ? `<div class="item-icon liked-songs">
+                            <i class="fas fa-heart"></i>
+                        </div>`
+                : `<img src="${data.image_url}" alt="${data.name}" class="item-image" />`
+            }
+                    <div class="item-info">
+                        <div class="item-title">${data.name}</div>
+                        <div class="item-subtitle">
+                            ${data.name === "Liked Songs" ? '<i class="fas fa-thumbtack"></i>' : ""}
+                            Playlist • ${data.total_tracks} songs
+                        </div>
+                    </div>
+                </div>`
+    }).join("");
+}
 
+async function showPlaylistToAdd() {
+    try {
+        const data = await httpRequest.get("/me/playlists");
+        renderPlaylistToAdd(data.playlists);
+        return
+    } catch (error) {
+        console.error("Không thể tải playlist");
+        throw error;
+    }
+}
+
+// Add Track to Playlist
+export function initAddTrackToPlaylist() {
+    const popupPlaylist = $(".popup-playlist-overlay");
+
+    function closePopup() {
+        popupPlaylist.classList.remove("show");
+        document.body.style.overflow = "auto"; // Restore scrolling
+    }
+
+    document.addEventListener("click", async (e) => {
+        // Mở popup
+        const addBtn = e.target.closest(".add-btn")
+        if (addBtn) {
+            e.preventDefault();
+            popupPlaylist.classList.add("show");
+        }
+
+        // Render playlist
+        await showPlaylistToAdd();
+
+        // Chọn playlist để thêm track
+        const popupItems = $$(".popup-item");
+        popupItems.forEach(item => {
+            item.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const playlistId = item.dataset.playlistId;
+                const trackId = localStorage.getItem("currentSong");
+
+                if (playlistId && trackId) {
+                    try {
+                        await httpRequest.post(`/playlists/${playlistId}/tracks`, {
+                            track_id: trackId,
+                            position: 0
+                        })
+
+                        // Đóng popup
+                        closePopup();
+                    } catch (error) {
+                        alert("Không thể thêm bài hát vào playlist");
+                        closePopup();
+                        throw error;
+                    }
+                }
+            });
+        });
+    });
+}
 
 /* 
  * PLAYER_MUSIC 
