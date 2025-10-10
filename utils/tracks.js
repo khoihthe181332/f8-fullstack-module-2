@@ -113,6 +113,10 @@ export function initAddTrackToPlaylist() {
     });
 }
 
+// Delete Track from PLaylist
+export function initDeleteTrackFromPlaylist() {
+
+}
 /* 
  * PLAYER_MUSIC 
 */
@@ -200,10 +204,8 @@ async function showTrackPlaying(e) {
 
     if (e) {
         // Nếu có event (user click), lấy từ element
-        const hitCard = e.target.closest(".hit-card");
-        const songItem = e.target.closest(".song-item");
-        const trackItem = e.target.closest(".track-item");
-        trackId = hitCard?.dataset.trackId ?? songItem?.dataset.trackId ?? trackItem?.dataset.trackId;
+        const element = e.target.closest(".hit-card") || e.target.closest(".song-item") || e.target.closest(".track-item");
+        trackId = element?.dataset.trackId;
     } else {
         // Nếu không có event (load từ localStorage), lấy từ storage
         trackId = localStorage.getItem("currentSong");
@@ -258,11 +260,6 @@ audio.addEventListener("ended", (e) => {
         audio.play();
     }
 });
-
-// Hàm chuyển đổi bài hát
-function swapSong(step) {
-
-}
 
 // Event phát / dừng bài hát
 playBtn.addEventListener("click", (e) => {

@@ -183,10 +183,9 @@ export function initPlaylistCardListeners() {
         // ....
 
         // Playlist - library item
-        const libraryMyPlaylistItem = e.target.closest('.library-item[data-item-type="myPlaylist"]');
-        const libraryFollowedPlaylistItem = e.target.closest(('.library-item[data-item-type="playlist"]'));
-        if (libraryFollowedPlaylistItem || libraryMyPlaylistItem) {
-            const playlistId = libraryMyPlaylistItem.dataset.playlistId ?? libraryFollowedPlaylistItem.dataset.playlistId;
+        const playlistItem = e.target.closest('.library-item[data-item-type="myPlaylist"]') || e.target.closest(('.library-item[data-item-type="playlist"]'));
+        if (playlistItem) {
+            const playlistId = playlistItem?.dataset.playlistId;
             if (playlistId) {
                 await showPlaylistById(playlistId);
                 localStorage.setItem("playlistId", playlistId);
