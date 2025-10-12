@@ -122,13 +122,13 @@ export function initDeleteTrackFromPlaylist() {
 */
 const NEXT = 1;
 const PREV = -1;
-let isLoop = localStorage.getItem("isLoop");
-let isShuffle = localStorage.getItem("isShuffle");
+let isLoop = localStorage.getItem("isLoop") === "true";
+let isShuffle = localStorage.getItem("isShuffle") === "true";
 // Audio
 const audio = $("#audio-music");
 // Controls button 
 const nextBtn = $(".next-btn");
-const prevBtn = $(".prev-btn")
+const prevBtn = $(".prev-btn");
 const shuffleBtn = $(".shuffle-btn");
 const loopBtn = $(".repeat-btn");
 const playBtn = $(".play-btn");
@@ -376,6 +376,7 @@ export function loadCurrentPlaylist() {
 
 const oneSong = () => {
     if (currentPlaylist.length <= 1) {
+        audio.currentTime = 0;
         audio.play();
         return true;
     }
@@ -396,16 +397,15 @@ nextBtn.addEventListener("click", (e) => {
 prevBtn.addEventListener("click", (e) => {
     if (oneSong()) return;
 
-    if (audio.currentTime > 3) {
-        console.log(123);
-        audio.currentTime = 0;
-        audio.play();
-    } else {
+    if (audio.currentTime < 2) {
         if (isShuffle) {
             console.log("PREV");
         } else {
             swapSong(PREV);
         }
+    } else {
+        audio.currentTime = 0;
+        audio.play();
     }
 });
 
