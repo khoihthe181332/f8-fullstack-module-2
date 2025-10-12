@@ -417,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Import
-import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer, initAddTrackToPlaylist, loadCurrentPlaylist } from "./utils/tracks.js";
+import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer, initAddTrackToPlaylist, loadCurrentPlaylist, initDeleteTrackFromPlaylist } from "./utils/tracks.js";
 import {
     showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
@@ -467,6 +467,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Add track to playlist
         initAddTrackToPlaylist();
+
+        // Delete track from playlist
+        initDeleteTrackFromPlaylist();
 
         // Load current playlist
         loadCurrentPlaylist();

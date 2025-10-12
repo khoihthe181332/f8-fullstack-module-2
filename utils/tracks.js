@@ -115,7 +115,37 @@ export function initAddTrackToPlaylist() {
 
 // Delete Track from PLaylist
 export function initDeleteTrackFromPlaylist() {
+    document.addEventListener("click", async (e) => {
+        // Kiểm tra xem element được click có phải là more-btn hoặc con của nó
+        const moreBtn = e.target.closest(".more-button");
 
+        if (moreBtn) {
+            const songItem = moreBtn.closest(".song-item");
+            if (songItem) {
+                e.preventDefault();
+                const trackId = songItem.dataset.trackId;
+                const playlistId = localStorage.getItem("playlistId");
+
+                if (trackId && playlistId) {
+                    // Confirm trước khi xóa
+                    const confirmed = confirm("Bạn có chắc chắn muốn xóa bài hát này?");
+                    if (!confirmed) return;
+
+                    try {
+                        // Xóa track khỏi playlist
+                        await httpRequest.del(`/playlists/${playlistId}/tracks/${trackId}`);
+                        // Xóa track khỏi UI
+                        songItem.remove();
+                    } catch (error) {
+                        alert("Không thể xóa bài hát khỏi playlist");
+                        throw error;
+                    }
+
+
+                }
+            }
+        }
+    });
 }
 /* 
  * PLAYER_MUSIC 
@@ -139,6 +169,11 @@ let currentPlaylist = [];
 
 export function initTrackCardListener() {
     document.addEventListener("click", async (e) => {
+        // Bỏ qua nếu click vào nút more
+        if (e.target.closest(".more-button")) {
+            return;
+        }
+
         // Chọn Track Card
         const playHitBtn = e.target.closest(".hit-play-btn");
         if (playHitBtn) {
@@ -648,3 +683,8 @@ export function handleProgressAudio() {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loopBtn.classList.toggle("active", isLoop);
+    shuffleBtn.classList.toggle("active", isShuffle);
+});

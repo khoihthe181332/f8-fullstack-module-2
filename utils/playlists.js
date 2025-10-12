@@ -141,7 +141,7 @@ function renderPlaylistTracks(data) {
                             <div class="song-duration">
                                 <span class="playing-indicator ${track.playlist_id ? "add" : ""}"><i class="fa-solid ${track.playlist_id ? "fa-circle-check" : "fa-circle-plus"}"></i></span>
                                 <span class="duration-time">${getTimeProgress(track.track_duration)}</span>
-                                <span class="more-button"><i class="fas fa-ellipsis-h"></i></span>
+                                <button class="more-button"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>`
         }).join("");
