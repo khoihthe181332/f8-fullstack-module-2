@@ -121,9 +121,9 @@ function renderPlaylistTracks(data) {
     try {
         const tracks = Array.isArray(data) ? data : (data.tracks || [data]);
 
-        songListContainer.innerHTML = tracks.map((track) => {
+        songListContainer.innerHTML = tracks.map((track, index) => {
             return `<div class="song-item" data-track-id="${track.track_id}" data-item-type="track">
-                            <div class="song-number">${track.position}</div>
+                            <div class="song-number">${index + 1}</div>
                             <div class="play-icon">
                                 <i class="fa-solid fa-play icon-play"></i>
                                 <i class="fa-solid fa-pause icon-pause"></i>

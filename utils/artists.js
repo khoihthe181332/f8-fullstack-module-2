@@ -117,6 +117,8 @@ export async function showArtistById(artistId) {
         const artistPopularTrack = await httpRequest.get(`/artists/${artistId}/tracks/popular`);
         renderArtistPopularTracks(artistPopularTrack);
 
+        localStorage.setItem("artistId", artistId);
+
         // Cập nhật URL
         const newUrl = `?view=artist&id=${artistId}`;
         window.history.pushState({ view: 'artist', artistId }, '', newUrl);

@@ -765,3 +765,10 @@
     background-color: #e6e6e6;
     transform: scale(1.04);
 }
+
+/* MORE */
+.add-btn.add {
+    color: var(--accent-primary);
+    border: unset;
+    pointer-events: none;
+}
