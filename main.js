@@ -429,7 +429,7 @@ import {
 } from "./utils/artists.js";
 
 import { showPlaylistsFollowed, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
-import { showAlbumsFollowed, initAlbumsCardListener } from "./utils/albums.js";
+import { showAlbumsFollowed, initAlbumsCardListener, followAlbum } from "./utils/albums.js";
 
 
 // Other functionality
@@ -452,6 +452,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentUser) {
         // Follow artist
         followArtist();
+
+        // Follow album
+        followAlbum();
 
         // My Playlist
         await showMyPlaylist();

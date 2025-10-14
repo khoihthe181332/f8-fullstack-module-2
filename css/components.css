@@ -1185,7 +1185,8 @@
 }
 
 /* MORE */
-.follow-button.following {
+.follow-artist-button.following,
+.follow-album-button.following {
     background-color: var(--accent-primary);
     border: unset;
 }

@@ -46,7 +46,7 @@ function renderAlbumById(data) {
     try {
         const albumHero = $(".album-hero");
         const albumControls = $(".album-controls");
-        albumHero.innerHTML = `<div class="album-cover-wrapper">
+        albumHero.innerHTML = `<div class="album-cover-wrapper" data-album-id="${data.id}">
                         <img src="${data.cover_image_url ?? data.artist_image_url}" alt="Album Cover" class="album-cover" />
                     </div>
                     <div class="album-info-wrapper">
@@ -64,7 +64,7 @@ function renderAlbumById(data) {
         albumControls.innerHTML = `<button class="play-button">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="follow-button ${data.is_following ? "following" : ""}">${data.is_following ? "Following" : "Follow"}</button>
+                    <button class="follow-button follow-album-button ${data.is_liked ? "following" : ""}">${data.is_liked ? "Following" : "Follow"}</button>
                     <button class="more-button">
                         <i class="fas fa-ellipsis"></i>
                     </button>`;
@@ -90,7 +90,7 @@ function renderAlbumTracks(data) {
                     <div class="track-info">
                         <div class="track-name">${track.title}</div>
                     </div>
-                    <div class="track-plays">${(track.play_count || 27498341).toLocaleString()}</div>
+                    <div class="track-plays">${(track.play_count).toLocaleString()}</div>
                     <span class="playing-indicator ${track.playlist_id ? "add" : ""}"><i class="fa-solid ${track.playlist_id ? "fa-circle-check" : "fa-circle-plus"}"></i></span>
                     <div class="track-duration">${getTimeProgress(track.duration)}</div>
                     <button class="track-menu-btn">
@@ -142,6 +142,41 @@ export function initAlbumsCardListener() {
             if (albumId) {
                 await showAlbumById(albumId);
             }
+        }
+    });
+}
+
+export function followAlbum() {
+    document.addEventListener("click", async (e) => {
+        const followBtn = e.target.closest(".follow-album-button");
+        if (!followBtn) return;
+        e.preventDefault();
+
+        // Kiểm tra đã follow chưa
+        if (followBtn.disabled || followBtn.classList.contains("following")) return;
+
+        // Disable button để tránh spam click
+        followBtn.disabled = true;
+
+        try {
+            const albumWrapper = $(".album-cover-wrapper");
+            const albumId = albumWrapper?.dataset.albumId;
+
+            if (!albumId) {
+                console.error("Không tìm thấy album ID");
+                followBtn.disabled = false;
+                return;
+            }
+
+            await httpRequest.post(`/albums/${albumId}/like`);
+
+            followBtn.textContent = "Following";
+            followBtn.classList.add("following");
+
+            await showAlbumsFollowed();
+        } catch (error) {
+            console.error("Không thể theo dõi album này");
+            followBtn.disabled = false;
         }
     });
 }

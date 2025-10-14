@@ -654,6 +654,10 @@
     gap: var(--spacing-lg);
 }
 
+.album-tracks-list {
+    margin-top: var(--spacing-lg);
+}
+
 /* Create Playlist Modal */
 .modal-playlist-overlay {
     position: fixed;

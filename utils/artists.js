@@ -44,7 +44,7 @@ function renderArtistById(data) {
     artistControls.innerHTML = `<button class="play-button">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="follow-button ${data.is_following ? "following" : ""}">${data.is_following ? "Following" : "Follow"}</button>
+                    <button class="follow-button follow-artist-button ${data.is_following ? "following" : ""}">${data.is_following ? "Following" : "Follow"}</button>
                     <button class="more-button">
                         <i class="fas fa-ellipsis"></i>
                     </button>`;
@@ -183,7 +183,7 @@ window.addEventListener('popstate', function (e) {
 export function followArtist() {
     // Dùng event delegation thay vì query button trực tiếp
     document.addEventListener("click", async (e) => {
-        const followBtn = e.target.closest(".follow-button");
+        const followBtn = e.target.closest(".follow-artist-button");
         if (!followBtn) return;
 
         e.preventDefault();
