@@ -525,6 +525,7 @@ function updateCurrentUser(user) {
 function unfollowedLibrary() {
     const contextMenu = $('#contextMenu');
     const unfollowItem = $('#unfollowItem');
+    const disableItem = $('#disable');
     let currentContextItem = null;
 
     if (!contextMenu || !unfollowItem) return;
@@ -539,6 +540,26 @@ function unfollowedLibrary() {
             contextMenu.style.left = e.pageX + 'px';
             contextMenu.style.top = e.pageY + 'px';
             contextMenu.classList.add('show');
+
+            const itemType = currentContextItem.dataset.itemType;
+            const disableText = $("#disable span");
+
+            switch (itemType) {
+                case 'artist':
+                    disableText.textContent = "Không phát nghệ sĩ này";
+                    break;
+                case 'myPlaylist':
+                    disableText.textContent = "Không phát danh sách phát này";
+                    break;
+                case 'playlist':
+                    disableText.textContent = "Không phát danh sách phát này";
+                    break;
+                case 'album':
+                    disableText.textContent = "Không phát album này";
+                    break;
+                default:
+                    throw new Error('Invalid item type');
+            }
         }
     });
 
@@ -602,6 +623,25 @@ function unfollowedLibrary() {
         } catch (error) {
             console.error('Error unfollowing item:', error);
             alert(`Không thể xóa. Vui lòng thử lại!`);
+        } finally {
+            currentContextItem = null;
+        }
+    });
+
+    // Xử lý click vào Disable
+    disableItem.addEventListener('click', function () {
+        if (!currentContextItem) return;
+
+        const itemToDisable = currentContextItem;
+
+        // Đóng context menu ngay lập tức
+        contextMenu.classList.remove('show');
+
+        try {
+            itemToDisable.classList.add('disable');
+        } catch (error) {
+            console.error('Error disable item:', error);
+            alert(`Không thể ẩn. Vui lòng thử lại!`);
         } finally {
             currentContextItem = null;
         }

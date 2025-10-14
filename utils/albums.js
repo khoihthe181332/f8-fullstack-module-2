@@ -30,7 +30,7 @@ function getTotalTimeOfAlbum(duration) {
     const hour = Math.floor(duration / 3600).toString().padStart(2, "0");
     const min = Math.floor((duration % 3600) / 60).toString().padStart(2, "0");
 
-    return `${hour > 0 ? hour + " hour" : ""} ${min > 0 ? min + " minutes" : ""} `;
+    return `${hour > 0 ? hour + " giờ" : ""} ${min > 0 ? min + " phút" : ""} `;
 }
 
 function getTimeProgress(duration) {
@@ -55,7 +55,7 @@ function renderAlbumById(data) {
                         <div class="album-meta">
                             <a href="#" class="album-artist-link">${data.artist_name}</a>
                             <span class="meta-separator">•</span>
-                            <span class="album-track-count">${data.total_tracks} songs</span>
+                            <span class="album-track-count">${data.total_tracks} bài hát</span>
                             <span class="meta-separator">•</span>
                             <span class="album-duration">${getTotalTimeOfAlbum(data.total_duration)}</span>
                         </div>
@@ -64,7 +64,7 @@ function renderAlbumById(data) {
         albumControls.innerHTML = `<button class="play-button">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="follow-button follow-album-button ${data.is_liked ? "following" : ""}">${data.is_liked ? "Following" : "Follow"}</button>
+                    <button class="follow-button follow-album-button ${data.is_liked ? "following" : ""}">${data.is_liked ? "Đang theo dõi" : "Theo dõi"}</button>
                     <button class="more-button">
                         <i class="fas fa-ellipsis"></i>
                     </button>`;

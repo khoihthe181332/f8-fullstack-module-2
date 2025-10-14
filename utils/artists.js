@@ -16,7 +16,7 @@ function renderTrendingArtists(data) {
                     </div>
                     <div class="artist-card-info">
                         <h3 class="artist-card-name">${artist.name}</h3>
-                        <p class="artist-card-type">Artist</p>
+                        <p class="artist-card-type">Nghệ sĩ</p>
                     </div>
                 </div>`;
     }).join("");
@@ -44,7 +44,7 @@ function renderArtistById(data) {
     artistControls.innerHTML = `<button class="play-button">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="follow-button follow-artist-button ${data.is_following ? "following" : ""}">${data.is_following ? "Following" : "Follow"}</button>
+                    <button class="follow-button follow-artist-button ${data.is_following ? "following" : ""}">${data.is_following ? "Đang theo dõi" : "Theo dõi"}</button>
                     <button class="more-button">
                         <i class="fas fa-ellipsis"></i>
                     </button>`;
@@ -57,11 +57,11 @@ function renderArtistById(data) {
         <div class="hero-content">
             <div class="verified-badge ${data.is_verified ? "show" : ""}">
                 <i class="fas fa-check-circle"></i>
-                <span>Verified Artist</span>
+                <span>Nghệ sĩ được xác minh</span>
             </div>
             <h1 class="artist-name">${data.name}</h1>
             <p class="monthly-listeners">
-                ${data.monthly_listeners.toLocaleString()} monthly listeners
+                ${data.monthly_listeners.toLocaleString()} người nghe hàng tháng
             </p>
         </div>`;
 }

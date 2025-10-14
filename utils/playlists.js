@@ -10,7 +10,7 @@ function renderPlaylistsFollowed(data) {
                             <img src="${data.image_url}" alt="${data.name}" class="item-image" />
                             <div class="item-info">
                                 <div class="item-title">${data.name}</div>
-                                <div class="item-subtitle">Playlist • ${data.total_tracks} songs</div>
+                                <div class="item-subtitle">Danh sách phát • ${data.total_tracks} bài hát</div>
                             </div>
                         </div>`
     }).join("");
@@ -47,7 +47,7 @@ function renderMyPlaylist(data) {
                         <div class="item-title">${data.name}</div>
                         <div class="item-subtitle">
                             ${data.name === "Liked Songs" ? '<i class="fas fa-thumbtack"></i>' : ""}
-                            Playlist • ${data.total_tracks} songs
+                            Danh sách phát • ${data.total_tracks} bài hát
                         </div>
                     </div>
                 </div>`
@@ -69,7 +69,7 @@ function getTotalTimeOfPlaylist(duration) {
     const hour = Math.floor(duration / 3600).toString().padStart(2, "0");
     const min = Math.floor((duration % 3600) / 60).toString().padStart(2, "0");
 
-    return `${hour > 0 ? hour + " hour" : ""} ${min > 0 ? min + " minutes" : ""} `;
+    return `${hour > 0 ? hour + " giờ" : ""} ${min > 0 ? min + " phút" : ""} `;
 }
 
 function getTimeProgress(duration) {
@@ -93,14 +93,14 @@ function renderPlaylistById(data) {
                             alt="${data.name}">
                     </div>
                     <div class="playlist-info">
-                        <div class="playlist-type">${data.is_public === 1 ? "Public playlist" : "Private playlist"}</div>
+                        <div class="playlist-type">${data.is_public === 1 ? "Danh sách phát công khai" : "Danh sách phát riêng tư"}</div>
                         <h1 class="playlist-title">${data.name}</h1>
                         <div class="playlist-meta">
                             <img src="${data.image_url}"
                                 alt="${data.name}">
                             <span>${data.name}</span>
                             <span class="meta-separator">•</span>
-                            <span>${data.total_tracks} songs, about ${getTotalTimeOfPlaylist(data.total_duration)}</span>
+                            <span>${data.total_tracks} bài hát, khoảng ${getTotalTimeOfPlaylist(data.total_duration)}</span>
                         </div>
                     </div>`;
 }

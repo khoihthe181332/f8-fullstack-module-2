@@ -60,6 +60,7 @@
 .playlist-meta img {
     width: 24px;
     height: 24px;
+    object-fit: cover;
     border-radius: var(--radius-full);
 }
 
@@ -347,10 +348,10 @@
     position: absolute;
     background-color: #282828;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    top: 0;
-    left: calc(100% + 10px);
-    width: 100%;
-    min-width: 140px;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 220px;
+    max-width: 400px;
     z-index: 1000;
     border-radius: 5px;
     overflow: hidden;
@@ -359,10 +360,21 @@
 .more-playlist button {
     width: 100%;
     display: flex;
-    padding: 13px 15px;
+    padding: 13px;
     align-items: center;
     color: #fff;
-    justify-content: space-around;
+    gap: 15px;
+    cursor: default;
+}
+
+.more-playlist button:first-child {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.more-playlist button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .more-playlist button:hover {

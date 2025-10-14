@@ -30,6 +30,12 @@
 .logo i {
     font-size: 32px;
     color: var(--text-primary);
+    cursor: pointer;
+}
+
+.logo:hover i {
+    color: var(--accent-primary);
+    scale: 1.04;
 }
 
 .sidebar-nav {
@@ -207,7 +213,7 @@
 }
 
 .player-artist {
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
