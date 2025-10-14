@@ -153,7 +153,7 @@ function renderPlaylistTracks(data) {
 
 import { toggleView } from "../main.js";
 
-export async function showPlaylistById(playlistId) {
+async function showPlaylistById(playlistId) {
     if (!playlistId) {
         console.error("Playlist ID is required");
         return;
@@ -169,6 +169,8 @@ export async function showPlaylistById(playlistId) {
         // Cập nhập URL
         const newUrl = `?view=playlist&id=${playlistId}`;
         window.history.pushState({ view: 'playlist', playlistId }, '', newUrl);
+
+        localStorage.setItem("playlistId", playlistId);
 
         // toggle view
         toggleView("playlist-page");
@@ -188,7 +190,6 @@ export function initPlaylistCardListeners() {
             const playlistId = playlistItem?.dataset.playlistId;
             if (playlistId) {
                 await showPlaylistById(playlistId);
-                localStorage.setItem("playlistId", playlistId);
             }
         }
     });

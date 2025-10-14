@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 likedSongsItem.classList.remove('hidden');
                 playlistsContainer.classList.remove('hidden');
                 myPlaylistContainer.classList.remove('hidden');
-                albumsContainer.classList.remove('hidden');
+                albumsContainer.classList.add('hidden');
                 artistsContainer.classList.add('hidden');
             } else if (tab === 'artists') {
                 // Hiện Artists
@@ -311,6 +311,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 albumsContainer.classList.add('hidden');
                 myPlaylistContainer.classList.add('hidden');
                 artistsContainer.classList.remove('hidden');
+            } else if (tab === 'albums') {
+                likedSongsItem.classList.add('hidden');
+                playlistsContainer.classList.add('hidden');
+                albumsContainer.classList.remove('hidden');
+                myPlaylistContainer.classList.add('hidden');
+                artistsContainer.classList.add('hidden');
             }
         }
 
@@ -419,11 +425,11 @@ document.addEventListener("DOMContentLoaded", function () {
 // Import
 import { showTrendingTracks, initTrackCardListener, handleVolumeAudio, handleProgressAudio, initPlayer, initAddTrackToPlaylist, loadCurrentPlaylist, initDeleteTrackFromPlaylist } from "./utils/tracks.js";
 import {
-    showTrendingArtists, showArtistById, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
+    showTrendingArtists, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showMyPlaylist, showPlaylistById, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
-import { showAlbumsFollowed } from "./utils/albums.js";
+import { showPlaylistsFollowed, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
+import { showAlbumsFollowed, initAlbumsCardListener } from "./utils/albums.js";
 
 
 // Other functionality
@@ -484,9 +490,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Chọn nghệ sĩ 
     initArtistCardListeners();
 
-    // Hiển thị nghệ sĩ được chọn
-    showArtistById();
+    // Kiểm tra URL parameters để hiển thị đúng view
     handleUrlParams();
+
+    // Chọn album 
+    initAlbumsCardListener();
 
     // Chọn playlist
     initPlaylistCardListeners();
@@ -664,19 +672,28 @@ export function toggleView(page) {
     const contentWrapper = $(".content-wrapper");
     const artistPage = $(".artist-page");
     const playlistPage = $(".playlist-page");
+    const albumPage = $(".album-page");
 
     if (page === "artist-page") {
         contentWrapper?.classList.add("hidden");
         artistPage?.classList.remove("hidden");
         playlistPage?.classList.add("hidden");
+        albumPage?.classList.add("hidden");
     } else if (page === "content-wrapper") {
         contentWrapper?.classList.remove("hidden");
+        albumPage?.classList.add("hidden");
         artistPage?.classList.add("hidden");
         playlistPage?.classList.add("hidden");
     } else if (page === "playlist-page") {
         contentWrapper?.classList.add("hidden");
+        albumPage?.classList.add("hidden");
         artistPage?.classList.add("hidden");
         playlistPage?.classList.remove("hidden");
+    } else if (page === "album-page") {
+        contentWrapper?.classList.add("hidden");
+        artistPage?.classList.add("hidden");
+        playlistPage?.classList.add("hidden");
+        albumPage?.classList.remove("hidden");
     }
 }
 

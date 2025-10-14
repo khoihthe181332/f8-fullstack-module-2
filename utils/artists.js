@@ -104,7 +104,7 @@ function renderArtistPopularTracks(data) {
 import { toggleView } from "../main.js";
 
 // GET Artist by ID
-export async function showArtistById(artistId) {
+async function showArtistById(artistId) {
     if (!artistId) {
         console.error("Artist ID is required");
         return;
@@ -132,13 +132,13 @@ export async function showArtistById(artistId) {
 
 // Event listeners cho artist cards
 export function initArtistCardListeners() {
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
         const artistCard = e.target.closest('.artist-card');
         if (artistCard) {
             e.preventDefault();
             const artistId = artistCard.dataset.artistId;
             if (artistId) {
-                showArtistById(artistId);
+                await showArtistById(artistId);
             }
         }
 
@@ -147,7 +147,7 @@ export function initArtistCardListeners() {
         if (libraryArtistItem) {
             const artistId = libraryArtistItem.dataset.artistId;
             if (artistId) {
-                showArtistById(artistId);
+                await showArtistById(artistId);
             }
         }
     });

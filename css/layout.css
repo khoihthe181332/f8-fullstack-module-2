@@ -288,7 +288,7 @@
     background-clip: content-box;
 }
 
-/* MORE */
+/* MORE artist-page */
 .artist-page {
     flex: 1;
     padding: 0 var(--spacing-lg) var(--spacing-lg);
@@ -420,7 +420,6 @@
 .section-title {
     font-size: 24px;
     font-weight: 700;
-    /* margin-bottom: var(--spacing-lg); */
 }
 
 .track-list {
@@ -428,7 +427,8 @@
     flex-direction: column;
 }
 
-.track-item {
+.track-item,
+.album-track-item {
     display: grid;
     grid-template-columns: 40px 1fr 1fr 60px;
     gap: var(--spacing-md);
@@ -446,26 +446,35 @@
 }
 
 .track-item.playing .fa-play,
-.track-item.playing .track-number {
+.track-item.playing .track-number,
+.album-track-item.playing .fa-play,
+.album-track-item.playing .album-track-number {
     display: none;
 }
 
 .track-item .fa-pause,
-.track-item .track-playing {
+.track-item .track-playing,
+.album-track-item .fa-pause,
+.album-track-item .album-track-playing {
     display: none;
 }
 
 .track-item.playing .fa-pause,
-.track-item.playing .track-playing {
+.track-item.playing .track-playing,
+.album-track-item.playing .fa-pause,
+.album-track-item.playing .album-track-playing {
     display: block;
 }
 
 .track-item.playing .track-name,
-.track-item.playing .track-playing {
+.track-item.playing .track-playing,
+.album-track-item.playing .album-track-name,
+.album-track-item.playing .album-track-playing {
     color: var(--accent-primary);
 }
 
-.track-item:hover {
+.track-item:hover,
+.album-track-item:hover {
     background-color: var(--bg-hover);
 }
 
@@ -477,33 +486,31 @@
     color: var(--accent-primary);
 }
 
-.track-number {
+.track-number,
+.album-track-number {
     color: var(--text-secondary);
     font-size: 16px;
     text-align: center;
     font-weight: 400;
 }
 
-.track-info {
+.track-info,
+.album-track-info {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
 }
 
-.track-image {
+.track-image,
+.album-track-image {
     width: 40px;
     height: 40px;
     border-radius: var(--radius-sm);
     object-fit: cover;
 }
 
-.track-title {
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--text-primary);
-}
-
-.track-plays {
+.track-plays,
+.album-track-plays {
     color: var(--text-secondary);
     font-size: 14px;
     text-align: right;
@@ -517,7 +524,8 @@
     font-size: 16px;
 }
 
-.track-duration {
+.track-duration,
+.album-track-duration {
     color: var(--text-secondary);
     font-size: 14px;
     text-align: right;
@@ -543,13 +551,107 @@
         font-size: 48px;
     }
 
-    .track-item {
+    .track-item,
+    .album-track-item {
         grid-template-columns: 30px 1fr 50px;
     }
 
     .track-plays {
         display: none;
     }
+}
+
+/* Album Page Container */
+.album-page {
+    flex: 1;
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    overflow: auto;
+}
+
+/* Album Hero Section */
+.album-hero {
+    position: relative;
+    height: 340px;
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    display: flex;
+    align-items: flex-end;
+    gap: var(--spacing-lg);
+}
+
+.album-cover-wrapper {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.album-cover {
+    width: 232px;
+    height: 232px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+    object-fit: cover;
+}
+
+.album-info-wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+}
+
+.album-type-badge {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.album-title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: var(--spacing-sm) 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.album-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.album-artist-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: text-decoration var(--transition-fast);
+}
+
+.album-artist-link:hover {
+    text-decoration: underline;
+}
+
+.meta-separator {
+    color: var(--text-secondary);
+}
+
+.album-track-count,
+.album-duration {
+    color: var(--text-secondary);
+}
+
+/* Album Controls Section */
+.album-controls {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
 }
 
 /* Create Playlist Modal */

@@ -39,6 +39,7 @@
                 <div class="nav-tabs">
                     <a href="?tab=playlists" class="nav-tab" data-tab="playlists">Playlists</a>
                     <a href="?tab=artists" class="nav-tab" data-tab="artists">Artists</a>
+                    <a href="?tab=albums" class="nav-tab" data-tab="albums">Albums</a>
                 </div>
 
                 <div class="search-library">
@@ -57,6 +58,10 @@
                     <div class="context-menu-item" id="unfollowItem">
                         <i class="fas fa-user-minus"></i>
                         <span>Unfollow</span>
+                    </div>
+                    <div class="context-menu-item" id="dont-play">
+                        <i class="fa-solid fa-microphone-slash"></i>
+                        <span>Don't play this Album</span>
                     </div>
                 </div>
 
@@ -97,7 +102,7 @@
                     </div>
 
                     <!-- Albums followed -->
-                    <div class="albums-followed-container">
+                    <div class="albums-followed-container hidden">
                         <div class="library-item album-followed-item">
                             <img src="placeholder.svg?height=48&width=48" alt="Đen" class="item-image" />
                             <div class="item-info">
@@ -337,6 +342,7 @@
                 </section>
             </div>
 
+            <!-- Artists page -->
             <div class="artist-page hidden">
                 <!-- Artist Hero -->
                 <section class="artist-hero">
@@ -424,6 +430,7 @@
                 </section>
             </div>
 
+            <!-- Playlists page -->
             <div class="playlist-page hidden">
                 <!-- Playlist Header -->
                 <div class="playlist-header">
@@ -549,6 +556,62 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Albums page -->
+            <div class="album-page hidden">
+                <!-- Album Hero -->
+                <section class="album-hero">
+                    <div class="album-cover-wrapper">
+                        <img src="https://via.placeholder.com/232" alt="Album Cover" class="album-cover" />
+                    </div>
+                    <div class="album-info-wrapper">
+                        <div class="album-type-badge">Album</div>
+                        <h1 class="album-title">Đi Về Nhà</h1>
+                        <div class="album-meta">
+                            <a href="#" class="album-artist-link">Đen</a>
+                            <span class="meta-separator">•</span>
+                            <span class="album-track-count">10 bài hát</span>
+                            <span class="meta-separator">•</span>
+                            <span class="album-duration">40 phút 22 giây</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Album controls -->
+                <section class="album-controls">
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="follow-button">Theo dõi</button>
+                    <button class="more-button">
+                        <i class="fas fa-ellipsis"></i>
+                    </button>
+                </section>
+
+                <!-- Album Tracks -->
+                <section class="album-tracks-section">
+                    <h2 class="section-title">Popular Tracks</h2>
+                    <div class="album-tracks-list">
+                        <div class="album-track-item ">
+                            <div class="album-track-number">1</div>
+                            <div class="album-track-image">
+                                <img src="placeholder.svg?height=40&width=40" alt="Cho Tôi Lang Thang" />
+                            </div>
+                            <div class="album-track-info">
+                                <div class="album-track-name">
+                                    Cho Tôi Lang Thang
+                                </div>
+                            </div>
+                            <div class="album-track-plays">27,498,341</div>
+                            <div class="album-track-duration">4:18</div>
+                            <button class="album-track-menu-btn">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <div class="show-more">Xem thêm</div>
             </div>
         </main>
 
