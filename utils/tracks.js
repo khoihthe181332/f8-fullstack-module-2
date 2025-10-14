@@ -295,6 +295,7 @@ function renderTrackPlayingById(data) {
                 </div>
                 <button class="add-btn">
                     <i class="fa-solid fa-plus"></i>
+                    <span class="tooltip">Thêm vào danh sách yêu thích</span>
                 </button>`;
 
     audio.src = data.audio_url;

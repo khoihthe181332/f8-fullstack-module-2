@@ -97,6 +97,11 @@
     transform: scale(1.06);
 }
 
+.play-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
 .control-button,
 .more-playlist-btn {
     width: 32px;
@@ -114,6 +119,10 @@
 
 .control-button:hover {
     scale: 1.04;
+}
+
+.more-playlist-btn:hover {
+    color: var(--text-primary);
 }
 
 .list-button {

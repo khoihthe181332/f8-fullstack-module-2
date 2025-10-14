@@ -70,6 +70,11 @@
     transform: scale(1.04);
 }
 
+.home-btn:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
 .home-btn i {
     font-size: 20px;
 }
@@ -143,11 +148,18 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    cursor: pointer;
+    user-select: none;
 }
 
 .create-btn:hover {
     color: var(--text-primary);
     transform: scale(1.04);
+}
+
+.create-btn:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
 }
 
 .create-btn i {
@@ -629,6 +641,11 @@
     transform: scale(1.04);
 }
 
+.control-btn:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
 .control-btn:active {
     transform: scale(0.96);
 }
@@ -761,6 +778,11 @@
 .add-btn:hover {
     color: var(--text-primary);
     transform: scale(1.04);
+}
+
+.add-btn:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
 }
 
 .add-btn i {
@@ -1201,4 +1223,32 @@
 .follow-album-button.following {
     background-color: var(--accent-primary);
     border: unset;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    background-color: #282828;
+    color: var(--text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: var(--z-tooltip);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-fast);
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+}
+
+.control-btn .tooltip {
+    top: -38px;
+}
+
+.add-btn .tooltip {
+    top: -43px;
 }

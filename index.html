@@ -30,10 +30,13 @@
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <h2 class="section-title">Thư viện</h2>
-                    <button class="create-btn">
+                    <div class="create-btn">
                         <i class="fas fa-plus"></i>
-                        Tạo
-                    </button>
+                        <span>Tạo</span>
+                        <article class="tooltip">
+                            <span>Tạo danh sách phát</span>
+                        </article>
+                    </div>
                 </div>
 
                 <div class="nav-tabs">
@@ -141,8 +144,11 @@
             <header class="main-header">
                 <div class="search-container">
                     <div class="search-box">
-                        <button class="home-btn" title="Home">
+                        <button class="home-btn">
                             <i class="fas fa-home"></i>
+                            <span class="tooltip">
+                                Trang chủ
+                            </span>
                         </button>
                         <div class="search-input-wrapper">
                             <i class="fas fa-search search-icon"></i>
@@ -455,10 +461,12 @@
                 <div class="playlist-controls">
                     <button class="play-button">
                         <i class="fas fa-play"></i>
+                        <span class="tooltip">Phát</span>
                     </button>
                     <button class="control-button shuffle-playlist-btn"><i class="fa-solid fa-shuffle"></i></button>
                     <div class=" more-playlist-btn">
                         <i class="fa-solid fa-ellipsis"></i>
+                        <span class="tooltip">Các cài đặt khác</span>
                         <div class="more-playlist">
                             <div class="more-playlist-wrapper" style="padding: 4px;">
                                 <button class="delete-playlist-btn">
@@ -629,6 +637,7 @@
                 </div>
                 <button class="add-btn">
                     <i class="fa-solid fa-plus"></i>
+
                 </button>
             </div>
 
@@ -638,18 +647,27 @@
                 <div class="player-controls">
                     <button class="control-btn shuffle-btn">
                         <i class="fas fa-random"></i>
+                        <span class="tooltip">
+                            Bật tính năng Trộn bài
+                        </span>
                     </button>
                     <button class="control-btn prev-btn">
                         <i class="fas fa-step-backward"></i>
+                        <span class="tooltip">Trước</span>
                     </button>
                     <button class="control-btn play-btn">
                         <i class="fas fa-play"></i>
+                        <span class="tooltip">Phát</span>
                     </button>
                     <button class="control-btn next-btn">
                         <i class="fas fa-step-forward"></i>
+                        <span class="tooltip">Sau</span>
                     </button>
                     <button class="control-btn repeat-btn">
                         <i class="fas fa-redo"></i>
+                        <span class="tooltip">
+                            Kích hoạt chế độ lặp lại
+                        </span>
                     </button>
                 </div>
                 <!-- Progress song -->
@@ -671,6 +689,7 @@
                 <div class="volume-container">
                     <button class="control-btn volume-btn">
                         <i class="fas fa-volume-down"></i>
+                        <span class="tooltip">Điều chỉnh âm lượng</span>
                     </button>
                     <div class="volume-bar">
                         <div class="volume-fill" style="width: 20%">
@@ -800,10 +819,10 @@
                                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                                     <path d="m15 5 4 4" />
                                 </svg>
-                                <div class="select-img">Select image</div>
+                                <div class="select-img">Chọn ảnh</div>
                             </div>
                             <div class="playlist-img">
-                                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                                <input type="file" id="file-input" name="image" accept="image/*" style="display: none;">
                                 <img src="./placeholder.svg" alt="Playlist image">
                             </div>
                         </div>
@@ -811,21 +830,20 @@
                         <div class="playlist-input">
                             <div id="playlist-title">
                                 <input type="text" class="" id="playlist-title-input"
-                                    placeholder="Enter playlist name...">
+                                    placeholder="Nhập tên danh sách phát">
                                 <div class="error-message">
                                     <i class="fas fa-info-circle"></i>
-                                    <span>Please enter playlist name</span>
+                                    <span>Không được để tên trống</span>
                                 </div>
                             </div>
                             <div id="playlist-description">
-                                <textarea id="playlist-desc-input"
-                                    placeholder="Enter description (no required)"></textarea>
+                                <textarea id="playlist-desc-input" placeholder="Nhập mô tả (Không bắt buộc)"></textarea>
                             </div>
                         </div>
 
                     </main>
                     <footer>
-                        <button type="submit" class="save-playlist">Save</button>
+                        <button type="submit" class="save-playlist">Lưu</button>
                     </footer>
                 </form>
             </div>
