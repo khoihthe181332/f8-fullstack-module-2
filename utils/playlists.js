@@ -40,7 +40,7 @@ function renderMyPlaylist(data) {
                     ${data.name === "Liked Songs"
                 ? `<div class="item-icon liked-songs">
                             <i class="fas fa-heart"></i>
-                           </div>`
+                        </div>`
                 : `<img src="${data.image_url}" alt="${data.name}" class="item-image" />`
             }
                     <div class="item-info">
