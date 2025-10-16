@@ -96,8 +96,6 @@ function renderPlaylistById(data) {
                         <div class="playlist-type">${data.is_public === 1 ? "Danh sách phát công khai" : "Danh sách phát riêng tư"}</div>
                         <h1 class="playlist-title">${data.name}</h1>
                         <div class="playlist-meta">
-                            <img src="${data.image_url}"
-                                alt="${data.name}">
                             <span>${data.name}</span>
                             <span class="meta-separator">•</span>
                             <span>${data.total_tracks} bài hát, khoảng ${getTotalTimeOfPlaylist(data.total_duration)}</span>
@@ -126,7 +124,7 @@ function renderPlaylistTracks(data) {
                             <div class="song-number">${index + 1}</div>
                             <div class="play-icon">
                                 <i class="fa-solid fa-play icon-play"></i>
-                                <i class="fa-solid fa-pause icon-pause"></i>
+                                <i class="fas fa-volume-up icon-pause"></i>
                             </div>
                             <div class="song-info">
                                 <img src="${track.track_image_url}"
@@ -224,78 +222,32 @@ window.addEventListener('popstate', function (e) {
 /** 
  * Tạo playlist
  */
-export async function createPlaylist(playlistData) {
+export async function createPlaylist() {
     try {
-        const response = await httpRequest.post('/playlists', playlistData);
+        const response = await httpRequest.post('/playlists', {
+            name: "Danh sách phát của tôi",
+            description: "Playlist description",
+            is_public: true,
+            image_url: "https://cdn.vox-cdn.com/thumbor/TtDUOcStwxcfVhfSms3Lj-5HlUY=/0x106:2040x1254/1600x900/cdn.vox-cdn.com/uploads/chorus_image/image/73520026/STK088_SPOTIFY_CVIRGINIA_C.0.jpg",
+
+        });
         return response;
     } catch (error) {
-        console.error('Error creating playlist:', error);
         throw error;
     }
 }
 
-// Xử lý chọn ảnh
-const playlistOverlay = $(".playlist-overlay");
-const playlistImg = $(".playlist-img img");
-const fileInput = $("#file-input");
-
-// Click vào overlay để chọn ảnh
-playlistOverlay.addEventListener("click", function () {
-    fileInput.click();
-});
-
-// Xử lý khi chọn file
-// ....
-
-const playlistCreateForm = $("#playlist-form");
-playlistCreateForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    // Lấy giá trị từ form
-    const playlistName = $("#playlist-title-input").value.trim();
-    const playlistDesc = $("#playlist-desc-input").value.trim();
-    const errorMessage = $(".error-message");
-
-    // Validate tên playlist
-    if (!playlistName) {
-        errorMessage.style.display = "flex";
-        $("#playlist-title-input").classList.add("error");
-        return;
-    } else {
-        errorMessage.style.display = "none";
-        $("#playlist-title-input").classList.remove("error");
-    }
-
-    // Chuẩn bị dữ liệu
-    const playlistData = {
-        name: playlistName,
-        description: playlistDesc || "Playlist description",
-        is_public: true,
-        image_url: "https://tse4.mm.bing.net/th/id/OIP.Lpgm30caiYmI_rJA5KZuGAHaEo?pid=Api&P=0&h=220"
-    };
-
+// Event listener cho nút tạo playlist
+const createPlaylistBtn = $(".create-btn");
+createPlaylistBtn.addEventListener("click", async () => {
     try {
-        // Gọi API tạo playlist
-        const result = await createPlaylist(playlistData);
-
-        // Thành công - đóng modal và reset form
-        console.log('Playlist created successfully:', result);
-        playlistCreateForm.reset();
-        $(".modal-playlist-overlay").classList.remove("show");
-
-        await showMyPlaylist();
+        const data = await createPlaylist();
+        await Promise.all([showMyPlaylist(), showPlaylistsFollowed(), showPlaylistById(data.playlist.id)]);
+        return data;
     } catch (error) {
-        // Xử lý lỗi
-        console.error('Failed to create playlist:', error);
-        alert('Failed to create playlist. Please try again.');
+        alert("Không thể tạo playlist mới", error);
+        throw error;
     }
-});
-
-// Reset form khi đóng modal
-$("#modalClose").addEventListener("click", function () {
-    playlistCreateForm.reset();
-    document.querySelector(".error-message").style.display = "none";
-    $("#playlist-title-input").classList.remove("error");
 });
 
 // Hàm update Playlist 

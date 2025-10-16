@@ -1252,3 +1252,8 @@
 .add-btn .tooltip {
     top: -43px;
 }
+
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}

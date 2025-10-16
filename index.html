@@ -60,7 +60,7 @@
                 <div class="context-menu" id="contextMenu">
                     <div class="context-menu-item" id="unfollowItem">
                         <i class="fas fa-user-minus"></i>
-                        <span>Bỏ theo dõi</span>
+                        <span>Xóa khỏi hồ sơ</span>
                     </div>
                     <div class="context-menu-item" id="disable">
                         <i class="fa-solid fa-microphone-slash"></i>
@@ -798,63 +798,11 @@
         </div>
     </div>
 
-    <!-- Create playlist modal -->
-    <div class="modal-playlist-overlay" id="create-playlist-modal">
-        <div class="modal-container">
-            <div class="heading">
-                <div class="modal-title">Create Playlist</div>
-                <button class="modal-close" id="modalClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class="content">
-                <form action="" id="playlist-form" autocomplete="off">
-                    <main>
-                        <div class="playlist-bgc">
-                            <div class="playlist-overlay">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"
-                                    fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="playlist-overlay-icon">
-                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                                    <path d="m15 5 4 4" />
-                                </svg>
-                                <div class="select-img">Chọn ảnh</div>
-                            </div>
-                            <div class="playlist-img">
-                                <input type="file" id="file-input" name="image" accept="image/*" style="display: none;">
-                                <img src="./placeholder.svg" alt="Playlist image">
-                            </div>
-                        </div>
-
-                        <div class="playlist-input">
-                            <div id="playlist-title">
-                                <input type="text" class="" id="playlist-title-input"
-                                    placeholder="Nhập tên danh sách phát">
-                                <div class="error-message">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>Không được để tên trống</span>
-                                </div>
-                            </div>
-                            <div id="playlist-description">
-                                <textarea id="playlist-desc-input" placeholder="Nhập mô tả (Không bắt buộc)"></textarea>
-                            </div>
-                        </div>
-
-                    </main>
-                    <footer>
-                        <button type="submit" class="save-playlist">Lưu</button>
-                    </footer>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Edit playlist modal -->
     <div class="modal-playlist-overlay" id="edit-playlist-modal">
         <div class="modal-container">
             <div class="heading">
-                <div class="modal-title">Update Playlist</div>
+                <div class="modal-title">Sửa thông tin chi tiết</div>
                 <button class="modal-close" id="editModalClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -871,7 +819,7 @@
                                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                                     <path d="m15 5 4 4" />
                                 </svg>
-                                <div class="select-img">Select image</div>
+                                <div class="select-img">Chọn ảnh</div>
                             </div>
                             <div class="playlist-img">
                                 <input type="file" id="edit-file-input" accept="image/*" style="display: none;">
@@ -882,21 +830,21 @@
                         <div class="playlist-input">
                             <div id="edit-playlist-title">
                                 <input type="text" class="" id="edit-playlist-title-input"
-                                    placeholder="Enter playlist name...">
+                                    placeholder="Nhập tên danh sách phát">
                                 <div class="error-message">
                                     <i class="fas fa-info-circle"></i>
-                                    <span>Please enter playlist name</span>
+                                    <span>Không được để trống</span>
                                 </div>
                             </div>
                             <div id="edit-playlist-description">
                                 <textarea id="edit-playlist-desc-input"
-                                    placeholder="Enter description (no required)"></textarea>
+                                    placeholder="Nhập mô tả (Không bắt buộc)"></textarea>
                             </div>
                         </div>
 
                     </main>
                     <footer>
-                        <button type="submit" class="save-playlist">Save</button>
+                        <button type="submit" class="save-playlist">Lưu</button>
                     </footer>
                 </form>
             </div>
@@ -907,7 +855,7 @@
     <div class="popup-playlist-overlay">
         <div class="popup-playlist-container">
             <div class="popup-playlist-head">
-                Choose playlist
+                Chọn danh sách phát
             </div>
             <div class="item-wrapper">
                 <div class="library-item liked-songs-item active">
@@ -924,7 +872,7 @@
                 </div>
             </div>
             <button class="close-popup">
-                Close
+                Đóng
             </button>
         </div>
     </div>

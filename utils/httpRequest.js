@@ -46,7 +46,7 @@ class HttpRequest {
 
     // POST method
     async post(path, data, options) {
-        return await this._send(path, "POSt", data, options);
+        return await this._send(path, "POST", data, options);
     }
 
     // PUT method

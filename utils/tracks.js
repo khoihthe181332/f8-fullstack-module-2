@@ -266,7 +266,7 @@ async function showTrackPlaying(e) {
             if (data) {
                 $(".player-image").src = data?.image_url || data?.track_image_url;
                 $(".player-title").textContent = data?.title || data?.track_title;
-                $(".player-artist").textContent = data?.artist_name || data?.track_artist_name;
+                $(".player-artist").textContent = data?.artist_name || data?.track_artist_name || "Unknown Artist";
                 if (data?.playlist_id) {
                     $(".add-btn").classList.add("add");
                     $(".add-btn").innerHTML = `<i class="fas fa-circle-check"></i>`;

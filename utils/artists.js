@@ -86,7 +86,6 @@ function renderArtistPopularTracks(data) {
                     <div class="track-image">
                         <img src="${track.image_url}" alt="${track.title}" />
                         <i class="fas fa-play track-item-play-btn"></i>
-                        <i class="fas fa-pause track-item-play-btn"></i>
                     </div>
                     <div class="track-info">
                         <div class="track-name">${track.title}</div>
@@ -208,7 +207,7 @@ export function followArtist() {
             await httpRequest.post(`/artists/${artistId}/follow`);
 
             // Cập nhật UI của button
-            followBtn.textContent = "Following";
+            followBtn.textContent = "Đang theo dõi";
             followBtn.classList.add("following");
 
             // Refresh danh sách nghệ sĩ đã theo dõi

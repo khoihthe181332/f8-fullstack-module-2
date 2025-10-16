@@ -87,33 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    // Đóng / Mở Create Playlist Modal
-    const playlistModal = document.querySelector("#create-playlist-modal");
-    const closePlaylistModalBtn = playlistModal.querySelector("#modalClose");
-    const playlistModalContainer = playlistModal.querySelector(".modal-container");
-
-    $(".create-btn").addEventListener("click", function () {
-        showPlaylistModal();
-    });
-
-    function showPlaylistModal() {
-        playlistModal.classList.add("show");
-        document.body.style.overflow = "hidden"; // Prevent background scrolling
-    }
-
-    closePlaylistModalBtn.addEventListener("click", closePlaylistModal);
-    playlistModal.addEventListener("click", closePlaylistModal);
-
-    function closePlaylistModal() {
-        playlistModal.classList.remove("show");
-        document.body.style.overflow = "auto"; // Restore scrolling
-    }
-
-    playlistModalContainer.addEventListener("click", (e) => {
-        e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt lên overlay
-    });
-
-
     // Đóng Update Playlist Modal
     const updatePlaylistModal = $("#edit-playlist-modal");
     const closeUpdatePlaylistModalBtn = updatePlaylistModal.querySelector("#editModalClose");
@@ -658,9 +631,9 @@ async function unfollowArtist(item) {
         const currentArtistId = heroBackground?.dataset.artistId;
 
         if (currentArtistId === artistId) {
-            const followBtn = $(".follow-button");
+            const followBtn = $(".follow-artist-button");
             if (followBtn) {
-                followBtn.textContent = "Follow";
+                followBtn.textContent = "Theo dõi";
                 followBtn.classList.remove("following");
                 followBtn.disabled = false;
             }

@@ -85,7 +85,6 @@ function renderAlbumTracks(data) {
                     <div class="track-image">
                         <img src="${track.image_url}" alt="${track.title}" />
                         <i class="fas fa-play track-item-play-btn"></i>
-                        <i class="fas fa-pause track-item-play-btn"></i>
                     </div>
                     <div class="track-info">
                         <div class="track-name">${track.title}</div>
