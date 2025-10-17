@@ -3,6 +3,9 @@ import httpRequest from "./httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const toastNotification = $(".toast-notif");
+const toastText = $(".toast-text");
+
 // Render Trending Artist
 function renderTrendingArtists(data) {
     const artistTrendingList = $(".artists-grid");
@@ -126,6 +129,11 @@ async function showArtistById(artistId) {
         toggleView("artist-page");
     } catch (error) {
         console.error("Không tải được thông tin nghệ sĩ:", error);
+        toastNotification.classList.add("error", "show")
+        toastText.textContent = "Hiển thị thông tin nghệ sĩ không thành công";
+        setTimeout(() => {
+            toastNotification.classList.remove("show")
+        }, 2000)
     }
 }
 
@@ -210,11 +218,21 @@ export function followArtist() {
             followBtn.textContent = "Đang theo dõi";
             followBtn.classList.add("following");
 
+            toastNotification.classList.add("success", "show")
+            toastText.textContent = "Theo dõi nghệ sĩ thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show")
+            }, 2000)
+
             // Refresh danh sách nghệ sĩ đã theo dõi
             await showArtistsFollowed();
 
         } catch (error) {
-            console.error("Không thể theo dõi nghệ sĩ này");
+            toastNotification.classList.add("error", "show")
+            toastText.textContent = "Không thể theo dõi nghệ sĩ này";
+            setTimeout(() => {
+                toastNotification.classList.remove("show")
+            }, 2000)
             followBtn.disabled = false;
         }
     });

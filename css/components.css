@@ -1257,3 +1257,57 @@ img {
     user-select: none;
     -webkit-user-drag: none;
 }
+
+/* Toast notification */
+.toast-notif {
+    height: 55px;
+    min-width: 180px;
+    background-color: #282828;
+    border-radius: 10px;
+    display: none;
+    position: fixed;
+    border-left: 7px solid;
+    right: 8px;
+    bottom: 12%;
+    z-index: 99999999; /* trên cùng các phần tử khác*/
+}
+
+.toast-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 12px;
+    padding: 10px 15px 10px 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.toast-container i {
+    display: none;
+}
+
+.toast-notif.show {
+    display: block;
+}
+
+/* Toast success */
+.toast-notif.success {
+    border-left-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.toast-notif.success .icon-success {
+    display: block;
+}
+
+/* Toast error */
+.toast-notif.error {
+    border-left-color: #f87171;
+    color: #f87171;
+}
+
+.toast-notif.error .icon-error {
+    display: block;
+}

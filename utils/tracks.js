@@ -3,6 +3,9 @@ import httpRequest from "./httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const toastNotification = $(".toast-notif");
+const toastText = $(".toast-text");
+
 // Render trending tracks
 function renderTrendingTrack(data) {
     const trendingTrackList = $(".hits-grid");
@@ -101,10 +104,19 @@ export function initAddTrackToPlaylist() {
                         })
                         // Đóng popup
                         closePopup();
+                        toastNotification.classList.add("success", "show")
+                        toastText.textContent = "Thêm bài hát thành công";
+                        setTimeout(() => {
+                            toastNotification.classList.remove("show")
+                        }, 2000)
                         return res;
                     } catch (error) {
-                        alert("Không thể thêm bài hát vào playlist");
                         closePopup();
+                        toastNotification.classList.add("error", "show")
+                        toastText.textContent = "Thêm bài hát không thành công";
+                        setTimeout(() => {
+                            toastNotification.classList.remove("show")
+                        }, 2000)
                         throw error;
                     }
                 }
@@ -136,8 +148,17 @@ export function initDeleteTrackFromPlaylist() {
                         await httpRequest.del(`/playlists/${playlistId}/tracks/${trackId}`);
                         // Xóa track khỏi UI
                         songItem.remove();
+                        toastNotification.classList.add("success", "show")
+                        toastText.textContent = "Xóa bài hát thành công";
+                        setTimeout(() => {
+                            toastNotification.classList.remove("show")
+                        }, 2000)
                     } catch (error) {
-                        alert("Không thể xóa bài hát khỏi playlist");
+                        toastNotification.classList.add("error", "show")
+                        toastText.textContent = "Xóa bài hát không thành công";
+                        setTimeout(() => {
+                            toastNotification.classList.remove("show")
+                        }, 2000)
                         throw error;
                     }
 
@@ -488,7 +509,19 @@ audio.addEventListener("ended", (e) => {
             swapSong(NEXT);
         }
     }
+});
 
+// Nút Play to dùng trong playlist-page, artist-page, album-page,....
+const playToBtn = $$(".play-button");
+playToBtn.forEach(btn => {
+    btn.addEventListener("click", async function (e) {
+        e.preventDefault();
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    });
 });
 
 // Hàm điều chỉnh âm lượng

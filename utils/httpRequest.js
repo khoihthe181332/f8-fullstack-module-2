@@ -10,13 +10,23 @@ class HttpRequest {
                 method,
                 headers: {
                     ...options.headers,
-                    'Content-Type': 'application/json',
                 },
             }
 
+            // Xử lý data
             if (data) {
-                _options.body = JSON.stringify(data);
+                if (data instanceof FormData) {
+                    // QUAN TRỌNG: Không set Content-Type, để browser tự set
+                    _options.body = data;
+                } else {
+                    _options.headers['Content-Type'] = 'application/json';
+                    _options.body = JSON.stringify(data);
+                }
+            } else {
+                // Nếu không có data thì vẫn set Content-Type mặc định
+                _options.headers['Content-Type'] = 'application/json';
             }
+
             const accessToken = localStorage.getItem("accessToken");
             if (accessToken) {
                 _options.headers.Authorization = `Bearer ${accessToken}`;
@@ -27,14 +37,12 @@ class HttpRequest {
 
             if (!res.ok) {
                 const error = new Error(`HTTP error: ${res.status}`);
-                // ...
                 error.response = response;
                 error.status = res.status;
                 throw error
             }
             return response;
         } catch (error) {
-            // console.log(error);
             throw error;
         }
     }

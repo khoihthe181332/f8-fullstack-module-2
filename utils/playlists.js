@@ -3,6 +3,9 @@ import httpRequest from "./httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const toastNotification = $(".toast-notif");
+const toastText = $(".toast-text");
+
 function renderPlaylistsFollowed(data) {
     const playlistsLiked = $(".playlists-followed-container");
     playlistsLiked.innerHTML = data.map((data) => {
@@ -173,7 +176,11 @@ async function showPlaylistById(playlistId) {
         // toggle view
         toggleView("playlist-page");
     } catch (error) {
-        console.error("Không tải được playlist");
+        toastNotification.classList.add("error", "show")
+        toastText.textContent = "Hiển thị danh sách phát không thành công";
+        setTimeout(() => {
+            toastNotification.classList.remove("show")
+        }, 2000)
     }
 }
 
@@ -245,7 +252,11 @@ createPlaylistBtn.addEventListener("click", async () => {
         await Promise.all([showMyPlaylist(), showPlaylistsFollowed(), showPlaylistById(data.playlist.id)]);
         return data;
     } catch (error) {
-        alert("Không thể tạo playlist mới", error);
+        toastNotification.classList.add("error", "show")
+        toastText.textContent = "Tạo danh sách phát không thành công"
+        setTimeout(() => {
+            toastNotification.classList.remove("show")
+        }, 2000)
         throw error;
     }
 });
@@ -256,6 +267,8 @@ export function initUpdatePlaylist() {
     const form = playlistModal.querySelector("#edit-playlist-form");
     const imgInput = playlistModal.querySelector(".playlist-img img");
     const nameInput = playlistModal.querySelector("#edit-playlist-title-input");
+    const editFileInput = playlistModal.querySelector("#edit-file-input");
+    const overlay = playlistModal.querySelector(".playlist-overlay");
 
     let cacheData = null;
 
@@ -270,7 +283,11 @@ export function initUpdatePlaylist() {
                 imgInput.src = cacheData.image_url;
                 nameInput.value = cacheData.name;
             } catch (error) {
-                alert("Không thể lấy thông tin của playlist");
+                toastNotification.classList.add("error", "show")
+                toastText.textContent = "Không thể lấy thông tin danh sách phát";
+                setTimeout(() => {
+                    toastNotification.classList.remove("show")
+                }, 2000)
                 throw error;
             }
         });
@@ -294,14 +311,65 @@ export function initUpdatePlaylist() {
                     image_url: newPlaylistImage || cacheData.image_url
                 });
 
-                await Promise.all([showMyPlaylist(), showPlaylistById()])
+                await Promise.all([showMyPlaylist(), showPlaylistById(playlistId)])
 
                 playlistModal.classList.remove("show");
+
+                // Thông báo
+                toastNotification.classList.add("success", "show")
+                toastText.textContent = "Cập nhật danh sách phát thành công"
+                setTimeout(() => {
+                    toastNotification.classList.remove("show");
+                }, 2000)
                 return data;
             } catch (error) {
-                alert(`Không thể cập nhật thông tin của playlist ${nameInput}`);
+                // Toast thông báo
+                toastNotification.classList.add("error", "show")
+                toastText.textContent = "Cập nhật danh sách phát không thành công"
+                setTimeout(() => {
+                    toastNotification.classList.remove("show");
+                }, 2000)
                 throw error;
             }
         }
     });
+
+    // Load ảnh được chọn từ local
+    overlay.addEventListener("click", () => {
+        editFileInput.click();
+    })
+
+    editFileInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        try {
+            // Tạo FormData
+            const formData = new FormData();
+            formData.append("images", file);  // Key phải là "images"
+
+            // Upload
+            const response = await httpRequest.post("/upload/images", formData);
+
+            // Lấy URL
+            if (response.files && response.files.length > 0) {
+                const baseUrl = 'https://spotify.f8team.dev';
+                const uploadedUrl = baseUrl + response.files[0].url;
+
+                // Cập nhật ảnh
+                imgInput.src = uploadedUrl;
+                newPlaylistImage = uploadedUrl;
+
+                console.log("Upload thành công:", uploadedUrl);
+            }
+        } catch (error) {
+            // Hiển thị thông báo khi không thành công
+            toastNotification.classList.add("error", "show")
+            toastText.textContent = "Tải ảnh không thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show")
+            }, 2000);
+        }
+    })
 }
