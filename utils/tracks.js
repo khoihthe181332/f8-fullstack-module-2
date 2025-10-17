@@ -28,7 +28,7 @@ function renderTrendingTrack(data) {
 // Show trending tracks
 export async function showTrendingTracks() {
     try {
-        const data = await httpRequest.get("/tracks/trending?limit=15");
+        const data = await httpRequest.get("/tracks/trending?limit=6");
         renderTrendingTrack(data.tracks);
     } catch (error) {
         console.error("Lỗi...");

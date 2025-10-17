@@ -1079,7 +1079,9 @@
 
 /* Hits Section */
 .hits-section,
-.artists-section {
+.artists-section,
+.playlist-section,
+.album-section {
     margin-bottom: var(--spacing-2xl);
 }
 
@@ -1099,7 +1101,9 @@
 
 /* Grid Layouts */
 .hits-grid,
-.artists-grid {
+.artists-grid,
+.playlist-grid,
+.album-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: var(--spacing-lg);
@@ -1107,7 +1111,9 @@
 
 /* Hit Cards */
 .hit-card,
-.artist-card {
+.artist-card,
+.playlist-card,
+.album-card {
     background-color: var(--bg-tertiary);
     border-radius: var(--radius-md);
     padding: var(--spacing-md);
@@ -1118,7 +1124,9 @@
 }
 
 .hit-card:hover,
-.artist-card:hover {
+.artist-card:hover,
+.playlist-card:hover,
+.album-card:hover {
     background-color: var(--bg-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -1126,7 +1134,9 @@
 
 /* Card Covers */
 .hit-card-cover,
-.artist-card-cover {
+.artist-card-cover,
+.playlist-card-cover,
+.album-card-cover {
     position: relative;
     margin-bottom: var(--spacing-md);
     border-radius: var(--radius-sm);
@@ -1135,7 +1145,9 @@
 }
 
 .hit-card-cover img,
-.artist-card-cover img {
+.artist-card-cover img,
+.playlist-card-cover img,
+.album-card-cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1147,7 +1159,9 @@
 
 /* Play Buttons */
 .hit-play-btn,
-.artist-play-btn {
+.artist-play-btn,
+.playlist-play-btn,
+.album-play-btn {
     position: absolute;
     bottom: var(--spacing-sm);
     right: var(--spacing-sm);
@@ -1168,36 +1182,48 @@
 }
 
 .hit-card:hover .hit-play-btn,
-.artist-card:hover .artist-play-btn {
+.artist-card:hover .artist-play-btn,
+.playlist-card:hover .playlist-play-btn,
+.album-card:hover .album-play-btn {
     opacity: 1;
     transform: translateY(0);
 }
 
 .hit-play-btn:hover,
-.artist-play-btn:hover {
+.artist-play-btn:hover,
+.playlist-play-btn:hover,
+.album-play-btn:hover {
     background-color: var(--accent-hover);
     transform: scale(1.04);
 }
 
 .hit-play-btn:active,
-.artist-play-btn:active {
+.artist-play-btn:active,
+.playlist-play-btn:active,
+.album-play-btn:active {
     transform: scale(0.96);
 }
 
 .hit-play-btn i,
-.artist-play-btn i {
+.artist-play-btn i,
+.playlist-play-btn i,
+.album-play-btn i {
     font-size: 16px;
     margin-left: 2px;
 }
 
 /* Card Info */
 .hit-card-info,
-.artist-card-info {
+.artist-card-info,
+.playlist-card-info,
+.album-card-info {
     padding: 0;
 }
 
 .hit-card-title,
-.artist-card-name {
+.artist-card-name,
+.playlist-card-title,
+.album-card-title {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
@@ -1208,7 +1234,9 @@
 }
 
 .hit-card-artist,
-.artist-card-type {
+.artist-card-type,
+.playlist-card-artist,
+.album-card-artist {
     font-size: 14px;
     color: var(--text-secondary);
     margin: 0;
