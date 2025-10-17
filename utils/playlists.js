@@ -19,12 +19,41 @@ function renderPlaylistsFollowed(data) {
     }).join("");
 }
 
+// Hiển thị playlist follow ở sidebar
 export async function showPlaylistsFollowed() {
     try {
         const data = await httpRequest.get("/me/playlists/followed?limit=20&offset=0");
         renderPlaylistsFollowed(data.playlists);
     } catch (error) {
         console.error("Không tải được Playlists đã theo dõi");
+    }
+}
+
+function renderPlaylistPopular(data) {
+    const playlistGrid = $(".playlist-grid");
+    playlistGrid.innerHTML = data.map(data => {
+        return ` <div class="playlist-card">
+                            <div class="playlist-card-cover">
+                                <img src="${data.image_url}" alt="${data.name}" />
+                                <button class="playlist-play-btn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                            <div class="playlist-card-info">
+                                <h3 class="playlist-card-title">${data.name}</h3>
+                                <p class="playlist-card-artist">${data.user_username}</p>
+                            </div>
+                        </div>`
+    }).join("");
+}
+
+export async function showPopularPlaylist() {
+    try {
+        const data = await httpRequest.get("/playlists?limit=9&offset=0");
+        renderPlaylistPopular(data.playlists);
+
+    } catch (error) {
+        console.error("Không tải được danh sách playlist");
     }
 }
 

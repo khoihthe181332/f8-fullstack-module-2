@@ -17,6 +17,7 @@ function renderAlbumsFollowed(data) {
     }).join("");
 }
 
+// Hiển thị danh sách album đã follow trên sidebar
 export async function showAlbumsFollowed() {
     try {
         const data = await httpRequest.get("/me/albums/liked?limit=20&offset=0");
@@ -38,6 +39,34 @@ function getTimeProgress(duration) {
     const sec = String(duration % 60).padStart(2, "0");
 
     return `${min}:${sec}`
+}
+
+// Hiển thị albums phổ biến trên trang home
+function renderPopularAlbums(data) {
+    const albumGrid = $(".album-grid");
+    albumGrid.innerHTML = data.map(data => {
+        return `<div class="album-card">
+                            <div class="album-card-cover">
+                                <img src="${data.cover_image_url}" alt="${data.title}" />
+                                <button class="album-play-btn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                            <div class="album-card-info">
+                                <h3 class="album-card-title">${data.title}</h3>
+                                <p class="album-card-artist">${data.artist_name}</p>
+                            </div>
+                        </div>`
+    }).join("");
+}
+
+export async function showPopularAlbum() {
+    try {
+        const data = await httpRequest.get("/albums/popular?limit=8");
+        renderPopularAlbums(data.albums);
+    } catch (error) {
+        console.log("Looix");
+    }
 }
 
 import { toggleView } from "../main.js";

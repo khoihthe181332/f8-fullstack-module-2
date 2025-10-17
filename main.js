@@ -401,8 +401,8 @@ import {
     showTrendingArtists, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
-import { showAlbumsFollowed, initAlbumsCardListener, followAlbum } from "./utils/albums.js";
+import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
+import { showAlbumsFollowed, initAlbumsCardListener, followAlbum, showPopularAlbum } from "./utils/albums.js";
 
 
 // Other functionality
@@ -469,8 +469,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Kiểm tra URL parameters để hiển thị đúng view
     handleUrlParams();
 
+    // Hiển thị album phổ biến
+    await showPopularAlbum();
+
     // Chọn album 
     initAlbumsCardListener();
+
+    // Hiển thị playlist phổ biến
+    await showPopularPlaylist();
 
     // Chọn playlist
     initPlaylistCardListeners();
