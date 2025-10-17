@@ -32,7 +32,7 @@ export async function showPlaylistsFollowed() {
 function renderPlaylistPopular(data) {
     const playlistGrid = $(".playlist-grid");
     playlistGrid.innerHTML = data.map(data => {
-        return ` <div class="playlist-card">
+        return ` <div class="playlist-card" data-item-type="playlist" data-playlist-id="${data.id}">
                             <div class="playlist-card-cover">
                                 <img src="${data.image_url}" alt="${data.name}" />
                                 <button class="playlist-play-btn">
@@ -47,6 +47,7 @@ function renderPlaylistPopular(data) {
     }).join("");
 }
 
+// Hiển thị playlist trong trang home
 export async function showPopularPlaylist() {
     try {
         const data = await httpRequest.get("/playlists?limit=9&offset=0");

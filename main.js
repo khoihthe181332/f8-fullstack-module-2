@@ -682,7 +682,21 @@ async function deletePlaylist(item) {
 async function removeAlbum(item) {
     const albumId = item.dataset.albumId;
     try {
-        return await httpRequest.del(`/albums/${albumId}/like`);
+        await httpRequest.del(`/albums/${albumId}/like`);
+
+        const albumWrapper = $(".album-cover-wrapper");
+        const currentAlbumId = albumWrapper.dataset.albumId;
+
+        if (currentAlbumId === albumId) {
+            const followBtn = $(".follow-album-button");
+            if (followBtn) {
+                followBtn.textContent = "Theo dõi";
+                followBtn.classList.remove("following");
+                followBtn.disabled = false;
+            }
+        }
+
+        await showAlbumsFollowed();
     } catch (error) {
         console.error('Error removing album:', error);
         throw error;

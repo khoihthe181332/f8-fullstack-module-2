@@ -45,7 +45,7 @@ function getTimeProgress(duration) {
 function renderPopularAlbums(data) {
     const albumGrid = $(".album-grid");
     albumGrid.innerHTML = data.map(data => {
-        return `<div class="album-card">
+        return `<div class="album-card" data-item-type="album" data-album-id="${data.id}">
                             <div class="album-card-cover">
                                 <img src="${data.cover_image_url}" alt="${data.title}" />
                                 <button class="album-play-btn">
@@ -159,14 +159,22 @@ async function showAlbumById(albumId) {
 }
 
 export function initAlbumsCardListener() {
+    let albumId;
+
     document.addEventListener("click", async (e) => {
         // Album card
-        // ... 
+        const albumCard = e.target.closest('.album-card[data-item-type="album"]');
+        if (albumCard) {
+            albumId = albumCard.dataset.albumId;
+            if (albumId) {
+                await showAlbumById(albumId);
+            }
+        }
 
         // Album followed item
         const albumItem = e.target.closest('.library-item[data-item-type="album"]');
         if (albumItem) {
-            const albumId = albumItem.dataset.albumId;
+            albumId = albumItem.dataset.albumId;
             if (albumId) {
                 await showAlbumById(albumId);
             }
@@ -198,7 +206,7 @@ export function followAlbum() {
 
             await httpRequest.post(`/albums/${albumId}/like`);
 
-            followBtn.textContent = "Following";
+            followBtn.textContent = "Đang theo dõi";
             followBtn.classList.add("following");
 
             await showAlbumsFollowed();
