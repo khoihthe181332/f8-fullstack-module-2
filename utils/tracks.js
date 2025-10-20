@@ -292,7 +292,7 @@ async function showTrackPlaying(e) {
             if (data) {
                 $(".player-image").src = data?.image_url || data?.track_image_url;
                 $(".player-title").textContent = data?.title || data?.track_title;
-                $(".player-artist").textContent = data?.artist_name || data?.track_artist_name || "Unknown Artist";
+                $(".player-artist").textContent = data?.artist_name || data?.track_artist_name;
                 if (data?.playlist_id) {
                     $(".add-btn").classList.add("add");
                     $(".add-btn").innerHTML = `<i class="fas fa-circle-check"></i>`;
@@ -406,31 +406,48 @@ function updatePlayingState(trackId) {
 export function loadCurrentPlaylist() {
     document.addEventListener("click", async (e) => {
         const playlist = e.target.closest('.library-item[data-item-type="playlist"]') || e.target.closest('.library-item[data-item-type="myPlaylist"]')
-            || e.target.closest('.library-item[data-item-type="artist"]');
+            || e.target.closest('.library-item[data-item-type="artist"]') || e.target.closest('.library-item[data-item-type="album"]')
+            || e.target.closest('.artist-card[data-item-type="artist"]')
+            || e.target.closest('.playlist-card[data-item-type="playlist"]')
+            || e.target.closest('.album-card[data-item-type="album"]');
 
         const playlistId = playlist?.dataset.playlistId
         const artistId = playlist?.dataset.artistId;
+        const albumId = playlist?.dataset.albumId;
 
+        // Lấy ra playlist ID
         if (playlistId) {
             try {
                 const data = await httpRequest.get(`/playlists/${playlistId}/tracks`);
                 currentPlaylist = data.tracks;
                 return currentPlaylist;
             } catch (error) {
-                console.error("Không thể tải playlist hiện tại:", error);
+                console.error("Không lấy được playlist ID", error);
                 throw error;
             }
         }
 
+        // Lấy ra artist ID
         if (artistId) {
             try {
                 const data = await httpRequest.get(`/artists/${artistId}/tracks/popular`);
                 currentPlaylist = data.tracks;
                 return currentPlaylist;
             } catch (error) {
-                console.error("Không thể tải playlist của nghệ sĩ:", error);
+                console.error("Không lấy được artist ID", error);
                 throw error;
+            }
+        }
 
+        // Lấy ra album ID
+        if (albumId) {
+            try {
+                const data = await httpRequest.get(`/albums/${albumId}/tracks`);
+                currentPlaylist = data.tracks;
+                return currentPlaylist;
+            } catch (error) {
+                console.error("Không lấy được album ID", error);
+                throw error;
             }
         }
     });

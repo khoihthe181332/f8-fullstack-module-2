@@ -10,7 +10,7 @@ const toastText = $(".toast-text");
 function renderTrendingArtists(data) {
     const artistTrendingList = $(".artists-grid");
     artistTrendingList.innerHTML = data.map((artist) => {
-        return `<div class="artist-card" data-artist-id="${artist.id}">
+        return `<div class="artist-card" data-item-type="artist" data-artist-id="${artist.id}">
                     <div class="artist-card-cover">
                         <img src="${artist.image_url}" alt="${artist.name}" />
                         <button class="artist-play-btn">

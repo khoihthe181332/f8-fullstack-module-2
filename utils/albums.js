@@ -183,6 +183,11 @@ async function showAlbumById(albumId) {
         // Toggle view
         toggleView("album-page");
     } catch (error) {
+        toastNotification.classList.add("error", "show")
+        toastText.textContent = "Hiển thị thông tin album không thành công";
+        setTimeout(() => {
+            toastNotification.classList.remove("show")
+        }, 2000)
         console.error("Không thể tải được thông tin album");
     }
 }

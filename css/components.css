@@ -233,7 +233,7 @@
 }
 
 .search-library-input.show {
-    width: 205px;
+    width: 100%;
     opacity: 1;
     visibility: visible;
     z-index: 99;
