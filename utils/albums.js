@@ -3,6 +3,9 @@ import httpRequest from "./httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const toastNotification = $(".toast-notif");
+const toastText = $(".toast-text");
+
 function renderAlbumsFollowed(data) {
     const albumsFollowed = $(".albums-followed-container");
 
@@ -132,6 +135,32 @@ function renderAlbumTracks(data) {
     }
 }
 
+// Xử lý URL parameters khi trang load
+export function handleUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view');
+    const albumId = urlParams.get('id');
+
+    if (view === 'album' && albumId) {
+        showAlbumById(albumId);
+    } else {
+        toggleView("content-wrapper");
+    }
+}
+
+// Event listener cho nút back/forward của browser
+window.addEventListener('popstate', function (e) {
+    if (e.state) {
+        if (e.state.view === 'album' && e.state.albumId) {
+            showAlbumById(e.state.albumId);
+        } else {
+            toggleView("content-wrapper");
+        }
+    } else {
+        handleUrlParams();
+    }
+});
+
 async function showAlbumById(albumId) {
     if (!albumId) {
         console.error("Album ID is required");
@@ -208,6 +237,12 @@ export function followAlbum() {
 
             followBtn.textContent = "Đang theo dõi";
             followBtn.classList.add("following");
+
+            toastNotification.classList.add("success", "show")
+            toastText.textContent = "Theo dõi album thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show")
+            }, 2000);
 
             await showAlbumsFollowed();
         } catch (error) {

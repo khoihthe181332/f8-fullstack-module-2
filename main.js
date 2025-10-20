@@ -3,7 +3,7 @@ import httpRequest from "./utils/httpRequest.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const currentUser = localStorage.getItem("currentUser");
+const currentUser = localStorage.getItem("currentUser" || null);
 
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -401,7 +401,7 @@ import {
     showTrendingArtists, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist } from "./utils/playlists.js";
+import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist, followPlaylist } from "./utils/playlists.js";
 import { showAlbumsFollowed, initAlbumsCardListener, followAlbum, showPopularAlbum } from "./utils/albums.js";
 
 
@@ -429,6 +429,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Follow album
         followAlbum();
 
+        // Follow playlist
+        followPlaylist();
+
         // My Playlist
         await showMyPlaylist();
 
@@ -442,6 +445,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Unfollowed
         unfollowedLibrary();
 
+        // Delete playlist
         initDeletePlaylistButton();
 
         // Update playlist
@@ -657,7 +661,22 @@ async function unfollowArtist(item) {
 async function removePlaylist(item) {
     const playlistId = item.dataset.playlistId;
     try {
-        return await httpRequest.del(`/playlists/${playlistId}/follow`);
+        await httpRequest.del(`/playlists/${playlistId}/follow`);
+        // Cập nhật lại button Follow nếu đang ở trang playlist đó
+        const playlistHeaderContainer = $(".playlist-header-container");
+        const currentPlaylistId = playlistHeaderContainer?.dataset.playlistId;
+
+        if (currentPlaylistId === playlistId) {
+            const followBtn = $(".follow-playlist-button");
+            if (followBtn) {
+                followBtn.textContent = "Theo dõi";
+                followBtn.classList.remove("following");
+                followBtn.disabled = false;
+            }
+        }
+
+        // Refresh danh sách phát đã theo dõi
+        await showPlaylistsFollowed();
     } catch (error) {
         console.error('Error removing playlist:', error);
         throw error;
@@ -744,41 +763,31 @@ function showHome() {
 
 // Hàm xóa Playlist trong Playlist Detail
 function initDeletePlaylistButton() {
-    const morePlaylistBtn = $(".more-playlist-btn");
-    const menuPlaylist = $(".more-playlist");
-
-    if (!morePlaylistBtn || !menuPlaylist) return;
-
-    // Toggle menu khi click vào nút more
-    morePlaylistBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        menuPlaylist.classList.toggle("show");
-    });
-
-    // Xử lý click vào nút Delete trong menu
-    const deletePlaylistBtn = menuPlaylist.querySelector(".delete-playlist-btn");
-
-    if (deletePlaylistBtn) {
-        deletePlaylistBtn.addEventListener("click", async (e) => {
+    document.addEventListener("click", async (e) => {
+        // QUAN TRỌNG: Kiểm tra delete button TRƯỚC
+        const deletePlaylistBtn = e.target.closest(".delete-playlist-btn");
+        if (deletePlaylistBtn) {
             e.stopPropagation();
+            // Tìm menu chứa nút delete
+            const menuPlaylist = deletePlaylistBtn.closest(".more-playlist");
 
             // Đóng menu
-            menuPlaylist.classList.remove("show");
+            menuPlaylist?.classList.remove("show");
 
             // Confirm trước khi xóa
             const confirmed = confirm("Bạn có chắc chắn muốn xóa playlist này?");
             if (!confirmed) return;
 
+            const playlistId = localStorage.getItem("playlistId");
+
             try {
-                // Gọi API xóa playlist (sử dụng hàm deletePlaylist chung)
-                await deletePlaylist({});
+                // Gọi hàm deletePlaylist có sẵn
+                const result = await deletePlaylist({});
 
                 // Tìm playlist item trong library để xóa khỏi DOM
-                const playlistId = localStorage.getItem("playlistId");
-                const playlistItem = $(`.library-item[data-playlist-id="${playlistId}"]`);
+                const playlistItem = document.querySelector(`.library-item[data-playlist-id="${playlistId}"]`);
 
                 if (playlistItem) {
-                    // Animation xóa 
                     playlistItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                     playlistItem.style.opacity = '0';
                     playlistItem.style.transform = 'translateX(-20px)';
@@ -786,25 +795,41 @@ function initDeletePlaylistButton() {
                     // Xóa phần tử sau khi animation hoàn thành
                     setTimeout(() => {
                         playlistItem.remove();
-                        localStorage.removeItem("playlistId");
-                        // Chuyển hướng về trang Home sau khi xóa
-                        showHome();
                     }, 300);
-                } else {
-                    // Nếu không tìm thấy element, huyển hướng về trang Home luôn
-                    showHome();
                 }
+
+                // Xóa playlistId và chuyển về Home
+                localStorage.removeItem("playlistId");
+                showHome();
             } catch (error) {
                 console.error('Error deleting playlist:', error);
                 alert("Không thể xóa playlist. Vui lòng thử lại!");
             }
-        });
-    }
+            return;
+        }
 
-    // Đóng menu khi click ra ngoài
-    document.addEventListener("click", (e) => {
-        if (!menuPlaylist.contains(e.target) && !morePlaylistBtn.contains(e.target)) {
-            menuPlaylist.classList.remove("show");
+        // Toggle menu khi click vào nút more (kiểm tra SAU delete button)
+        const morePlaylistBtn = e.target.closest(".more-playlist-btn");
+        if (morePlaylistBtn) {
+            e.stopPropagation();
+            const menuPlaylist = morePlaylistBtn.querySelector(".more-playlist");
+            if (menuPlaylist) {
+                // Đóng tất cả menu khác
+                document.querySelectorAll(".more-playlist.show").forEach(menu => {
+                    if (menu !== menuPlaylist) {
+                        menu.classList.remove("show");
+                    }
+                });
+                menuPlaylist.classList.toggle("show");
+            }
+            return;
+        }
+
+        // Đóng tất cả menu khi click ra ngoài
+        if (!e.target.closest(".more-playlist") && !e.target.closest(".more-playlist-btn")) {
+            document.querySelectorAll(".more-playlist.show").forEach(menu => {
+                menu.classList.remove("show");
+            });
         }
     });
 }

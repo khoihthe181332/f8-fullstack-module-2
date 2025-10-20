@@ -1248,7 +1248,8 @@
 
 /* MORE */
 .follow-artist-button.following,
-.follow-album-button.following {
+.follow-album-button.following,
+.follow-playlist-button.following {
     background-color: var(--accent-primary);
     border: unset;
 }

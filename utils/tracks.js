@@ -102,21 +102,23 @@ export function initAddTrackToPlaylist() {
                             track_id: trackId,
                             position: 0
                         })
-                        // Đóng popup
-                        closePopup();
+                        // Thông báo
                         toastNotification.classList.add("success", "show")
                         toastText.textContent = "Thêm bài hát thành công";
                         setTimeout(() => {
                             toastNotification.classList.remove("show")
                         }, 2000)
+
+                        // Đóng popup
+                        closePopup();
                         return res;
                     } catch (error) {
-                        closePopup();
                         toastNotification.classList.add("error", "show")
                         toastText.textContent = "Thêm bài hát không thành công";
                         setTimeout(() => {
                             toastNotification.classList.remove("show")
                         }, 2000)
+                        closePopup();
                         throw error;
                     }
                 }
@@ -146,13 +148,16 @@ export function initDeleteTrackFromPlaylist() {
                     try {
                         // Xóa track khỏi playlist
                         await httpRequest.del(`/playlists/${playlistId}/tracks/${trackId}`);
-                        // Xóa track khỏi UI
-                        songItem.remove();
+
+                        // Thông báo
                         toastNotification.classList.add("success", "show")
                         toastText.textContent = "Xóa bài hát thành công";
                         setTimeout(() => {
                             toastNotification.classList.remove("show")
-                        }, 2000)
+                        }, 2000);
+
+                        // Xóa track khỏi UI
+                        songItem.remove();
                     } catch (error) {
                         toastNotification.classList.add("error", "show")
                         toastText.textContent = "Xóa bài hát không thành công";

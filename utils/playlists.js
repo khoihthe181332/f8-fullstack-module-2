@@ -115,6 +115,7 @@ function getTimeProgress(duration) {
 // Render Playlist by ID
 function renderPlaylistById(data) {
     const playlistHeader = $(".playlist-header");
+    const playlistControls = $(".playlist-controls");
 
     if (!playlistHeader) {
         console.error("Playlist hero element not found");
@@ -134,6 +135,67 @@ function renderPlaylistById(data) {
                             <span>${data.total_tracks} bài hát, khoảng ${getTotalTimeOfPlaylist(data.total_duration)}</span>
                         </div>
                     </div>`;
+
+    playlistControls.innerHTML = `<button class="play-button">
+                        <i class="fas fa-play"></i>
+                        <span class="tooltip">Phát</span>
+                    </button>
+                    <button class="control-button shuffle-playlist-btn"><i class="fa-solid fa-shuffle"></i></button>
+                    <div class="more-playlist-btn">
+                        <i class="fa-solid fa-ellipsis"></i>
+                        <span class="tooltip">Các cài đặt khác</span>
+                        <div class="more-playlist">
+                            <div class="more-playlist-wrapper" style="padding: 4px;">
+                                <button class="delete-playlist-btn">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Xóa bỏ danh sách phát
+                                </button>
+                                <button class="update-playlist-btn">
+                                    <i class="fa-solid fa-pen"></i>
+                                    Chỉnh sửa danh sách phát
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="list-button">
+                        Danh sách
+                        <span>☰</span>
+                    </button>`;
+}
+
+function renderPlaylistPopularById(data) {
+    const playlistHeader = $(".playlist-header");
+    const playlistControls = $(".playlist-controls");
+
+    if (!playlistHeader) {
+        console.error("Playlist hero element not found");
+        return;
+    }
+
+    playlistHeader.innerHTML = `<div class="playlist-header-container" data-playlist-id="${data.id}">
+    <div class="playlist-img">
+                        <img src="${data.image_url}"
+                            alt="${data.name}">
+                    </div>
+                    <div class="playlist-info">
+                        <div class="playlist-type">${data.is_public === 1 ? "Danh sách phát công khai" : "Danh sách phát riêng tư"}</div>
+                        <h1 class="playlist-title">${data.name}</h1>
+                        <div class="playlist-meta">
+                            <span>${data.name}</span>
+                            <span class="meta-separator">•</span>
+                            <span>${data.total_tracks} bài hát, khoảng ${getTotalTimeOfPlaylist(data.total_duration)}</span>
+                        </div>
+                    </div>
+                    </div>
+                    `;
+
+    playlistControls.innerHTML = `<button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="follow-button follow-playlist-button ${data.is_following ? "following" : ""}">${data.is_following ? "Đang theo dõi" : "Theo dõi"}</button>
+                    <button class="more-button">
+                        <i class="fas fa-ellipsis"></i>
+                    </button>`;
 }
 
 function formatDate(dateString) {
@@ -211,20 +273,67 @@ async function showPlaylistById(playlistId) {
         setTimeout(() => {
             toastNotification.classList.remove("show")
         }, 2000)
+
+        console.log(error);
+    }
+}
+
+async function showPlaylistPopularById(playlistId) {
+    if (!playlistId) {
+        console.error("Playlist ID is required");
+        return;
+    }
+
+    try {
+        const data = await httpRequest.get(`/playlists/${playlistId}`);
+        renderPlaylistPopularById(data);
+
+        const tracksOfPlaylist = await httpRequest.get(`/playlists/${playlistId}/tracks`);
+        renderPlaylistTracks(tracksOfPlaylist);
+
+        // Cập nhập URL
+        const newUrl = `?view=playlist&id=${playlistId}`;
+        window.history.pushState({ view: 'playlist', playlistId }, '', newUrl);
+
+        localStorage.setItem("playlistId", playlistId);
+
+        // toggle view
+        toggleView("playlist-page");
+    } catch (error) {
+        toastNotification.classList.add("error", "show")
+        toastText.textContent = "Hiển thị danh sách phát không thành công";
+        setTimeout(() => {
+            toastNotification.classList.remove("show")
+        }, 2000)
     }
 }
 
 export function initPlaylistCardListeners() {
+    let playlistId = null;
     document.addEventListener("click", async (e) => {
         // Playlist card
-        // ....
+        const playlistCard = e.target.closest('.playlist-card[data-item-type="playlist"]');
+        if (playlistCard) {
+            playlistId = playlistCard?.dataset.playlistId;
+            if (playlistId) {
+                await showPlaylistPopularById(playlistId);
+            }
+        }
 
         // Playlist - library item
-        const playlistItem = e.target.closest('.library-item[data-item-type="myPlaylist"]') || e.target.closest(('.library-item[data-item-type="playlist"]'));
-        if (playlistItem) {
-            const playlistId = playlistItem?.dataset.playlistId;
+        const myPlaylistItem = e.target.closest('.library-item[data-item-type="myPlaylist"]');
+        if (myPlaylistItem) {
+            playlistId = myPlaylistItem?.dataset.playlistId;
             if (playlistId) {
                 await showPlaylistById(playlistId);
+            }
+        }
+
+        const playlistItem = e.target.closest('.library-item[data-item-type="playlist"]');
+        if (playlistItem) {
+            playlistId = playlistItem?.dataset.playlistId;
+            if (playlistId) {
+                await showPlaylistPopularById(playlistId);
             }
         }
     });
@@ -255,6 +364,48 @@ window.addEventListener('popstate', function (e) {
         handleUrlParams();
     }
 });
+
+// Follow playlist
+export function followPlaylist() {
+    document.addEventListener("click", async (e) => {
+        const followBtn = e.target.closest(".follow-playlist-button");
+        if (!followBtn) return;
+        e.preventDefault();
+
+        // Kiểm tra đã follow chưa
+        if (followBtn.disabled || followBtn.classList.contains("following")) return;
+
+        // Disable button để tránh spam click
+        followBtn.disabled = true;
+
+        try {
+            const playlistHeaderContainer = $(".playlist-header-container");
+            const playlistId = playlistHeaderContainer?.dataset.playlistId;
+
+            if (!playlistId) {
+                console.error("Không tìm thấy album ID");
+                followBtn.disabled = false;
+                return;
+            }
+
+            await httpRequest.post(`/playlists/${playlistId}/follow`);
+
+            followBtn.textContent = "Đang theo dõi";
+            followBtn.classList.add("following");
+
+            toastNotification.classList.add("success", "show")
+            toastText.textContent = "Theo dõi danh sách phát thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show")
+            }, 2000)
+
+            await showPlaylistsFollowed();
+        } catch (error) {
+            console.error("Không thể theo dõi danh sách phát này");
+            followBtn.disabled = false;
+        }
+    });
+}
 
 /** 
  * Tạo playlist
@@ -293,113 +444,110 @@ createPlaylistBtn.addEventListener("click", async () => {
 
 // Hàm update Playlist 
 export function initUpdatePlaylist() {
-    const playlistModal = $("#edit-playlist-modal");
+    // Sử dụng event delegation
+    document.addEventListener("click", async (e) => {
+        const updatePlaylistBtn = e.target.closest(".update-playlist-btn");
+        if (!updatePlaylistBtn) return;
+
+        e.stopPropagation();
+
+        const playlistModal = document.querySelector("#edit-playlist-modal");
+        const imgInput = playlistModal.querySelector(".playlist-img img");
+        const nameInput = playlistModal.querySelector("#edit-playlist-title-input");
+
+        playlistModal.classList.add("show");
+
+        const playlistId = localStorage.getItem("playlistId");
+        try {
+            const cacheData = await httpRequest.get(`/playlists/${playlistId}`);
+            imgInput.src = cacheData.image_url;
+            nameInput.value = cacheData.name;
+
+            // Lưu cache data vào dataset để dùng sau
+            playlistModal.dataset.cacheData = JSON.stringify(cacheData);
+        } catch (error) {
+            toastNotification.classList.add("error", "show");
+            toastText.textContent = "Không thể lấy thông tin danh sách phát";
+            setTimeout(() => {
+                toastNotification.classList.remove("show");
+            }, 2000);
+        }
+    });
+
+    // Xử lý form submit
+    const playlistModal = document.querySelector("#edit-playlist-modal");
     const form = playlistModal.querySelector("#edit-playlist-form");
     const imgInput = playlistModal.querySelector(".playlist-img img");
     const nameInput = playlistModal.querySelector("#edit-playlist-title-input");
     const editFileInput = playlistModal.querySelector("#edit-file-input");
     const overlay = playlistModal.querySelector(".playlist-overlay");
 
-    let cacheData = null;
-
-    const updatePlaylistBtn = document.querySelector(".update-playlist-btn");
-    if (updatePlaylistBtn) {
-        // Mở modal update playlist
-        updatePlaylistBtn.addEventListener("click", async (e) => {
-            playlistModal.classList.add("show");
-            const playlistId = localStorage.getItem("playlistId");
-            try {
-                cacheData = await httpRequest.get(`/playlists/${playlistId}`);
-                imgInput.src = cacheData.image_url;
-                nameInput.value = cacheData.name;
-            } catch (error) {
-                toastNotification.classList.add("error", "show")
-                toastText.textContent = "Không thể lấy thông tin danh sách phát";
-                setTimeout(() => {
-                    toastNotification.classList.remove("show")
-                }, 2000)
-                throw error;
-            }
-        });
-    };
-
-    let newPlaylistName = null;
     let newPlaylistImage = null;
-
-    // Cập nhật tên playlist mới
-    nameInput.addEventListener("change", (e) => {
-        newPlaylistName = nameInput.value.trim();
-    });
-
-    form.addEventListener("submit", async e => {
-        e.preventDefault();
-        const playlistId = localStorage.getItem("playlistId");
-        if (playlistId) {
-            try {
-                const data = await httpRequest.put(`/playlists/${playlistId}`, {
-                    name: newPlaylistName,
-                    image_url: newPlaylistImage || cacheData.image_url
-                });
-
-                await Promise.all([showMyPlaylist(), showPlaylistById(playlistId)])
-
-                playlistModal.classList.remove("show");
-
-                // Thông báo
-                toastNotification.classList.add("success", "show")
-                toastText.textContent = "Cập nhật danh sách phát thành công"
-                setTimeout(() => {
-                    toastNotification.classList.remove("show");
-                }, 2000)
-                return data;
-            } catch (error) {
-                // Toast thông báo
-                toastNotification.classList.add("error", "show")
-                toastText.textContent = "Cập nhật danh sách phát không thành công"
-                setTimeout(() => {
-                    toastNotification.classList.remove("show");
-                }, 2000)
-                throw error;
-            }
-        }
-    });
 
     // Load ảnh được chọn từ local
     overlay.addEventListener("click", () => {
         editFileInput.click();
-    })
+    });
 
     editFileInput.addEventListener("change", async (e) => {
         const file = e.target.files[0];
-
         if (!file) return;
 
         try {
-            // Tạo FormData
             const formData = new FormData();
-            formData.append("images", file);  // Key phải là "images"
+            formData.append("images", file);
 
-            // Upload
             const response = await httpRequest.post("/upload/images", formData);
 
-            // Lấy URL
             if (response.files && response.files.length > 0) {
                 const baseUrl = 'https://spotify.f8team.dev';
                 const uploadedUrl = baseUrl + response.files[0].url;
 
-                // Cập nhật ảnh
                 imgInput.src = uploadedUrl;
                 newPlaylistImage = uploadedUrl;
 
                 console.log("Upload thành công:", uploadedUrl);
             }
         } catch (error) {
-            // Hiển thị thông báo khi không thành công
-            toastNotification.classList.add("error", "show")
+            toastNotification.classList.add("error", "show");
             toastText.textContent = "Tải ảnh không thành công";
             setTimeout(() => {
-                toastNotification.classList.remove("show")
+                toastNotification.classList.remove("show");
             }, 2000);
         }
-    })
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const playlistId = localStorage.getItem("playlistId");
+
+        if (!playlistId) return;
+
+        const newPlaylistName = nameInput.value.trim();
+        const cacheData = JSON.parse(playlistModal.dataset.cacheData || '{}');
+
+        try {
+            await httpRequest.put(`/playlists/${playlistId}`, {
+                name: newPlaylistName || cacheData.name,
+                image_url: newPlaylistImage || cacheData.image_url
+            });
+
+            await Promise.all([showMyPlaylist(), showPlaylistById(playlistId)]);
+
+            playlistModal.classList.remove("show");
+            newPlaylistImage = null;
+
+            toastNotification.classList.add("success", "show");
+            toastText.textContent = "Cập nhật danh sách phát thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show");
+            }, 2000);
+        } catch (error) {
+            toastNotification.classList.add("error", "show");
+            toastText.textContent = "Cập nhật danh sách phát không thành công";
+            setTimeout(() => {
+                toastNotification.classList.remove("show");
+            }, 2000);
+        }
+    });
 }

@@ -9,7 +9,12 @@
     display: flex;
     gap: var(--spacing-lg);
     padding: var(--spacing-2xl) 0;
-    margin-bottom: var(--spacing-lg);
+    /* margin-bottom: var(--spacing-lg); */
+}
+
+.playlist-header-container {
+    display: flex;
+    gap: var(--spacing-lg);
 }
 
 .playlist-img {
