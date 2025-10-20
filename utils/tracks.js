@@ -193,6 +193,11 @@ let currentSong = localStorage.getItem("currentSong");
 let currentIndex = Number(localStorage.getItem("currentIndex")) || 0;
 let currentPlaylist = [];
 
+// Biến quản lý shuffle song
+let shufflePlaylist = [];
+let shuffleHistory = []; // Lưu các bài đã phát trong shuffle
+let originalIndex = 0; // Lưu vị trí ban đầu khi bật shuffle
+
 export function initTrackCardListener() {
     document.addEventListener("click", async (e) => {
         // Bỏ qua nếu click vào nút more
@@ -344,6 +349,7 @@ export async function initPlayer() {
     }
 }
 
+// Lấy ra bài hát hiện tại
 function getCurrentSong(trackId) {
     currentIndex = currentPlaylist.findIndex(track => {
         const trackIdentifier = track.track_id || track.id;
@@ -356,8 +362,20 @@ function getCurrentSong(trackId) {
 
 // Hàm chuyển đổi bài hát
 function swapSong(step) {
-    currentIndex = (currentIndex + step + currentPlaylist.length) % currentPlaylist.length;
-    const nextTrack = currentPlaylist[currentIndex];
+    let nextTrack;
+
+    if (isShuffle) {
+        // Sử dụng shuffle playlist
+        if (step === NEXT) {
+            nextTrack = getNextShuffleTrack();
+        } else {
+            nextTrack = getPrevShuffleTrack();
+        }
+    } else {
+        // Sử dụng playlist bình thường
+        currentIndex = (currentIndex + step + currentPlaylist.length) % currentPlaylist.length;
+        nextTrack = currentPlaylist[currentIndex];
+    }
 
     if (nextTrack) {
         const trackId = nextTrack.track_id || nextTrack.id;
@@ -403,13 +421,16 @@ function updatePlayingState(trackId) {
     }
 }
 
+// Hàm cập nhật playlist hiện tại
 export function loadCurrentPlaylist() {
     document.addEventListener("click", async (e) => {
-        const playlist = e.target.closest('.library-item[data-item-type="playlist"]') || e.target.closest('.library-item[data-item-type="myPlaylist"]')
-            || e.target.closest('.library-item[data-item-type="artist"]') || e.target.closest('.library-item[data-item-type="album"]')
-            || e.target.closest('.artist-card[data-item-type="artist"]')
-            || e.target.closest('.playlist-card[data-item-type="playlist"]')
-            || e.target.closest('.album-card[data-item-type="album"]');
+        const playlist = e.target.closest('.library-item[data-item-type="playlist"]') ||
+            e.target.closest('.library-item[data-item-type="myPlaylist"]') ||
+            e.target.closest('.library-item[data-item-type="artist"]') ||
+            e.target.closest('.library-item[data-item-type="album"]') ||
+            e.target.closest('.artist-card[data-item-type="artist"]') ||
+            e.target.closest('.playlist-card[data-item-type="playlist"]') ||
+            e.target.closest('.album-card[data-item-type="album"]');
 
         const playlistId = playlist?.dataset.playlistId
         const artistId = playlist?.dataset.artistId;
@@ -420,6 +441,12 @@ export function loadCurrentPlaylist() {
             try {
                 const data = await httpRequest.get(`/playlists/${playlistId}/tracks`);
                 currentPlaylist = data.tracks;
+
+                // Reset shuffle khi load playlist mới
+                if (isShuffle) {
+                    createShufflePlaylist();
+                }
+
                 return currentPlaylist;
             } catch (error) {
                 console.error("Không lấy được playlist ID", error);
@@ -432,6 +459,12 @@ export function loadCurrentPlaylist() {
             try {
                 const data = await httpRequest.get(`/artists/${artistId}/tracks/popular`);
                 currentPlaylist = data.tracks;
+
+                // Reset shuffle khi load playlist mới
+                if (isShuffle) {
+                    createShufflePlaylist();
+                }
+
                 return currentPlaylist;
             } catch (error) {
                 console.error("Không lấy được artist ID", error);
@@ -444,6 +477,12 @@ export function loadCurrentPlaylist() {
             try {
                 const data = await httpRequest.get(`/albums/${albumId}/tracks`);
                 currentPlaylist = data.tracks;
+
+                // Reset shuffle khi load playlist mới
+                if (isShuffle) {
+                    createShufflePlaylist();
+                }
+
                 return currentPlaylist;
             } catch (error) {
                 console.error("Không lấy được album ID", error);
@@ -451,6 +490,79 @@ export function loadCurrentPlaylist() {
             }
         }
     });
+}
+
+// Hàm tạo shuffle playlist
+function createShufflePlaylist() {
+    // Copy playlist hiện tại
+    shufflePlaylist = [...currentPlaylist];
+
+    // Lưu bài đang phát
+    const currentTrack = currentPlaylist[currentIndex];
+
+    // Xóa bài đang phát ra khỏi mảng shuffle
+    shufflePlaylist = shufflePlaylist.filter(track => {
+        const trackId = track.track_id || track.id;
+        const currentTrackId = currentTrack.track_id || currentTrack.id;
+        return trackId !== currentTrackId;
+    });
+
+    // Shuffle mảng
+    for (let i = shufflePlaylist.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shufflePlaylist[i], shufflePlaylist[j]] = [shufflePlaylist[j], shufflePlaylist[i]];
+    }
+
+    // Thêm bài đang phát vào đầu
+    shufflePlaylist.unshift(currentTrack);
+
+    // Reset history và index
+    shuffleHistory = [currentTrack];
+    currentIndex = 0;
+}
+
+// Hàm lấy bài tiếp theo trong shuffle
+function getNextShuffleTrack() {
+    // Nếu đã phát hết playlist
+    if (shuffleHistory.length >= shufflePlaylist.length) {
+        // Tạo lại shuffle playlist mới (loại bỏ bài vừa phát)
+        const lastTrack = shuffleHistory[shuffleHistory.length - 1];
+        createShufflePlaylist();
+
+        // Đảm bảo bài đầu tiên của shuffle mới khác bài cuối của shuffle cũ
+        if (shufflePlaylist.length > 1) {
+            const firstTrackId = shufflePlaylist[0].track_id || shufflePlaylist[0].id;
+            const lastTrackId = lastTrack.track_id || lastTrack.id;
+
+            if (firstTrackId === lastTrackId) {
+                [shufflePlaylist[0], shufflePlaylist[1]] = [shufflePlaylist[1], shufflePlaylist[0]];
+            }
+        }
+
+        shuffleHistory = [];
+        currentIndex = 0;
+    }
+
+    currentIndex++;
+    const nextTrack = shufflePlaylist[currentIndex];
+    shuffleHistory.push(nextTrack);
+
+    return nextTrack;
+}
+
+// Hàm lấy bài trước đó trong shuffle
+function getPrevShuffleTrack() {
+    // Nếu đang ở bài đầu tiên, không làm gì
+    if (currentIndex <= 0) {
+        return shufflePlaylist[0];
+    }
+
+    // Xóa bài hiện tại khỏi history
+    shuffleHistory.pop();
+
+    // Lùi về bài trước
+    currentIndex--;
+    return shufflePlaylist[currentIndex];
 }
 
 const oneSong = () => {
@@ -465,23 +577,14 @@ const oneSong = () => {
 // Event chuyển bài hát
 nextBtn.addEventListener("click", (e) => {
     if (oneSong()) return;
-
-    if (isShuffle) {
-        console.log("NEXT");
-    } else {
-        swapSong(NEXT);
-    }
+    swapSong(NEXT);
 });
 
 prevBtn.addEventListener("click", (e) => {
     if (oneSong()) return;
 
     if (audio.currentTime < 2) {
-        if (isShuffle) {
-            console.log("PREV");
-        } else {
-            swapSong(PREV);
-        }
+        swapSong(PREV);
     } else {
         audio.currentTime = 0;
         audio.play();
@@ -510,8 +613,27 @@ shuffleBtn.addEventListener("click", e => {
     isShuffle = !isShuffle;
     shuffleBtn.classList.toggle("active", isShuffle);
 
+    if (isShuffle) {
+        // Bật shuffle: lưu index hiện tại và tạo shuffle playlist
+        originalIndex = currentIndex;
+        createShufflePlaylist();
+        console.log("Shuffle ON");
+    } else {
+        // Tắt shuffle: quay về playlist bình thường
+        const currentTrackId = currentSong;
+        currentIndex = currentPlaylist.findIndex(track => {
+            const trackId = track.track_id || track.id;
+            return trackId === currentTrackId;
+        });
+
+        // Reset shuffle data
+        shufflePlaylist = [];
+        shuffleHistory = [];
+        console.log("Shuffle OFF");
+    }
+
     localStorage.setItem("isShuffle", isShuffle);
-})
+});
 
 audio.addEventListener("playing", (e) => {
     playBtn.classList.add("playing");
