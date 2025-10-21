@@ -1,4 +1,5 @@
 import httpRequest from "./httpRequest.js";
+import { showMyPlaylist } from "./playlists.js";
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -111,6 +112,9 @@ export function initAddTrackToPlaylist() {
 
                         // Đóng popup
                         closePopup();
+
+                        // Cập nhật lại thông tin playlist đó
+                        await showMyPlaylist(playlistId);
                         return res;
                     } catch (error) {
                         toastNotification.classList.add("error", "show")
@@ -156,6 +160,8 @@ export function initDeleteTrackFromPlaylist() {
                             toastNotification.classList.remove("show")
                         }, 2000);
 
+                        // Cập nhật lại thông tin playlist đó
+                        await showMyPlaylist(playlistId);
                         // Xóa track khỏi UI
                         songItem.remove();
                     } catch (error) {

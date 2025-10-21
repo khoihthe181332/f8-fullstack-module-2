@@ -87,14 +87,111 @@ function renderMyPlaylist(data) {
     }).join("");
 }
 
-export async function showMyPlaylist() {
+export async function showMyPlaylist(sortType = currentSortType) {
     try {
         const data = await httpRequest.get("/me/playlists");
-        renderMyPlaylist(data.playlists);
-        return
+        let playlists = [...data.playlists];
+
+        // Áp dụng sort hiện tại
+        if (sortType === "alphabetical") {
+            playlists.sort((a, b) => {
+                if (a.name === "Liked Songs") return -1;
+                if (b.name === "Liked Songs") return 1;
+                return a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' });
+            });
+        } else {
+            playlists.sort((a, b) => {
+                if (a.name === "Liked Songs") return -1;
+                if (b.name === "Liked Songs") return 1;
+                return 0;
+            });
+        }
+
+        renderMyPlaylist(playlists);
     } catch (error) {
         console.error("Không thể tải playlist");
         throw error;
+    }
+}
+
+let currentSortType = "recent"; // Lưu trạng thái sort hiện tại
+
+// Hàm khởi tạo Sort Playlist
+export function initSortPlaylist() {
+    const sortBtn = $(".sort-btn");
+    const sortPopup = $(".sort-popup");
+    const sortOptions = $$(".sort-option");
+    const sortText = $(".sort-text");
+
+    if (!sortBtn || !sortPopup) return;
+
+    // Toggle popup khi click nút sort
+    sortBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sortPopup.classList.toggle("show");
+    });
+
+    // Đóng popup khi click ra ngoài
+    document.addEventListener("click", (e) => {
+        if (!sortPopup.contains(e.target) && !sortBtn.contains(e.target)) {
+            sortPopup.classList.remove("show");
+        }
+    });
+
+    // Xử lý click vào từng option
+    sortOptions.forEach(option => {
+        option.addEventListener("click", async () => {
+            const sortType = option.dataset.sort;
+
+            // Cập nhật UI
+            sortOptions.forEach(opt => opt.classList.remove("active"));
+            option.classList.add("active");
+
+            // Cập nhật text button
+            sortText.textContent = sortType === "recent" ? "Gần đây" : "Thứ tự chữ cái";
+
+            // Đóng popup
+            sortPopup.classList.remove("show");
+
+            // Lưu trạng thái và sắp xếp lại
+            currentSortType = sortType;
+            await sortAndRenderPlaylists(sortType);
+        });
+    });
+}
+
+// Hàm sắp xếp và render playlist
+async function sortAndRenderPlaylists(sortType) {
+    try {
+        const data = await httpRequest.get("/me/playlists");
+        let playlists = [...data.playlists];
+
+        if (sortType === "alphabetical") {
+            // Sắp xếp theo bảng chữ cái (A-Z)
+            playlists.sort((a, b) => {
+                if (a.name === "Liked Songs") return -1;
+                if (b.name === "Liked Songs") return 1;
+                return a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' });
+            });
+        } else {
+            // Gần đây - giữ thứ tự mặc định (Liked Songs đầu tiên)
+            playlists.sort((a, b) => {
+                if (a.name === "Liked Songs") return -1;
+                if (b.name === "Liked Songs") return 1;
+                return 0;
+            });
+        }
+
+        // Render lại với data đã sort
+        renderMyPlaylist(playlists);
+
+    } catch (error) {
+        console.error("Không thể sắp xếp playlist:", error);
+        toastNotification.classList.add("error", "show");
+        toastText.textContent = "Không thể sắp xếp danh sách phát";
+        setTimeout(() => {
+            toastNotification.classList.remove("show");
+        }, 2000);
     }
 }
 

@@ -50,10 +50,35 @@
                         <i class="fas fa-search"></i>
                     </button>
                     <input type="text" class="search-library-input" placeholder="Tìm trong thư viện" tabindex="1">
+                    <!-- Sort -->
                     <button class="sort-btn">
-                        <span>Gần đây</span>
+                        <span class="sort-text">Gần đây</span>
                         <i class="fas fa-list"></i>
                     </button>
+                    <!-- Popup Sort Options -->
+                    <div class="sort-popup">
+                        <div class="sort-popup-header">
+                            <span>Sắp xếp theo</span>
+                        </div>
+                        <div class="sort-popup-options">
+                            <!-- Gần đây -->
+                            <button class="sort-option active" data-sort="recent">
+                                <div class="sort-option-wrapper">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span>Gần đây</span>
+                                </div>
+                                <i class="fas fa-check check"></i>
+                            </button>
+                            <!-- Xếp theo bảng chữ cái -->
+                            <button class="sort-option" data-sort="alphabetical">
+                                <div class="sort-option-wrapper">
+                                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                                    <span>Thứ tự chữ cái</span>
+                                </div>
+                                <i class="fas fa-check check"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Context Menu -->

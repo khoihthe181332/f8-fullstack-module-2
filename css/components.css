@@ -1340,3 +1340,83 @@ img {
 .toast-notif.error .icon-error {
     display: block;
 }
+
+/* Sort Popup */
+.sort-popup {
+    position: absolute;
+    top: 50px;
+    right: 16px;
+    background: #282828;
+    border-radius: 8px;
+    box-shadow:
+        0 16px 24px rgba(0, 0, 0, 0.3),
+        0 6px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.sort-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sort-popup-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    color: #b3b3b3;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.sort-popup-options {
+    padding: 8px 0;
+}
+
+.sort-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: transparent;
+    gap: 10px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.sort-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sort-option i {
+    font-size: 16px;
+}
+
+.sort-option .check {
+    opacity: 0;
+}
+
+.sort-option span {
+    font-weight: 600;
+    font-size: 15px;
+    flex: 1;
+    margin-left: 4px;
+}
+
+.sort-option.active .check {
+    opacity: 1;
+}
+
+.sort-option.active {
+    color: #1db954;
+}
