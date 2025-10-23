@@ -1287,6 +1287,14 @@ img {
     -webkit-user-drag: none;
 }
 
+.sort-btn .tooltip {
+    top: -38px;
+}
+
+.sort-btn:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
 /* Toast notification */
 .toast-notif {
     height: 55px;

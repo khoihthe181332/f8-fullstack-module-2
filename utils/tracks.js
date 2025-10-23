@@ -643,12 +643,14 @@ shuffleBtn.addEventListener("click", e => {
 
 audio.addEventListener("playing", (e) => {
     playBtn.classList.add("playing");
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    playBtn.innerHTML = `<i class="fas fa-pause">
+        </i><span class="tooltip">Dừng</span>`;
 });
 
 audio.addEventListener("pause", (e) => {
     playBtn.classList.remove("playing");
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    playBtn.innerHTML = `<i class="fas fa-play"></i> 
+        <span class="tooltip">Phát</span>`;
 });
 
 audio.addEventListener("ended", (e) => {
