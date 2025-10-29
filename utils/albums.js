@@ -1,4 +1,5 @@
 import httpRequest from "./httpRequest.js";
+import { sortLibraryItems, getCurrentSortType } from "./sortLibrary.js";
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -24,7 +25,8 @@ function renderAlbumsFollowed(data) {
 export async function showAlbumsFollowed() {
     try {
         const data = await httpRequest.get("/me/albums/liked?limit=20&offset=0");
-        renderAlbumsFollowed(data.albums);
+        const sortedAlbums = sortLibraryItems(data.albums, getCurrentSortType());
+        renderAlbumsFollowed(sortedAlbums);
     } catch (error) {
         console.error("Không tải được albums đã thích");
     }

@@ -1,4 +1,5 @@
 import httpRequest from "./httpRequest.js";
+import { sortLibraryItems, getCurrentSortType } from "./sortLibrary.js";
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -255,7 +256,8 @@ function renderArtistsFollowed(data) {
 export async function showArtistsFollowed() {
     try {
         const data = await httpRequest.get("/me/following?limit=20&offset=0");
-        renderArtistsFollowed(data.artists);
+        const sortedArtists = sortLibraryItems(data.artists, getCurrentSortType());
+        renderArtistsFollowed(sortedArtists);
     } catch (error) {
         console.error("Không tải được danh sách nghệ sĩ đã theo dõi");
     }

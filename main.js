@@ -401,8 +401,9 @@ import {
     showTrendingArtists, initArtistCardListeners, showArtistsFollowed, handleUrlParams, followArtist
 } from "./utils/artists.js";
 
-import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist, followPlaylist, initSortPlaylist } from "./utils/playlists.js";
+import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist, followPlaylist } from "./utils/playlists.js";
 import { showAlbumsFollowed, initAlbumsCardListener, followAlbum, showPopularAlbum } from "./utils/albums.js";
+import { initSortLibrary } from "./utils/sortLibrary.js";
 
 
 // Other functionality
@@ -460,8 +461,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Load current playlist
         loadCurrentPlaylist();
 
-        // Sắp xếp playlist 
-        initSortPlaylist();
+        // Sắp xếp Library 
+        initSortLibrary(async (sortType) => {
+            try {
+                // Re-render tất cả library items với sort type mới
+                await Promise.all([
+                    showMyPlaylist(),
+                    showPlaylistsFollowed(),
+                    showAlbumsFollowed(),
+                    showArtistsFollowed()
+                ]);
+            } catch (error) {
+                console.error("Không thể sắp xếp:", error);
+            }
+        });
     }
 
     // Hiển thị các bài hát thịnh hành hôm nay
