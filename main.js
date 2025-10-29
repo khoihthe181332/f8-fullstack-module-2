@@ -404,6 +404,7 @@ import {
 import { showPlaylistsFollowed, showPopularPlaylist, showMyPlaylist, initPlaylistCardListeners, initUpdatePlaylist, followPlaylist } from "./utils/playlists.js";
 import { showAlbumsFollowed, initAlbumsCardListener, followAlbum, showPopularAlbum } from "./utils/albums.js";
 import { initSortLibrary } from "./utils/sortLibrary.js";
+import { initSearchLibrary } from "./utils/search.js";
 
 
 // Other functionality
@@ -461,10 +462,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Load current playlist
         loadCurrentPlaylist();
 
-        // Sắp xếp Library 
+        // Sắp xếp library
         initSortLibrary(async (sortType) => {
             try {
-                // Re-render tất cả library items với sort type mới
                 await Promise.all([
                     showMyPlaylist(),
                     showPlaylistsFollowed(),
@@ -473,6 +473,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ]);
             } catch (error) {
                 console.error("Không thể sắp xếp:", error);
+            }
+        });
+
+        // Search library
+        initSearchLibrary(async (query) => {
+            try {
+                // Re-render tất cả khi search
+                await Promise.all([
+                    showMyPlaylist(),
+                    showPlaylistsFollowed(),
+                    showAlbumsFollowed(),
+                    showArtistsFollowed()
+                ]);
+            } catch (error) {
+                console.error("Không thể tìm kiếm:", error);
             }
         });
     }

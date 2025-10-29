@@ -2,27 +2,33 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+import { getCurrentSearchQuery, filterItems } from "./search.js";
+
 let currentSortType = "recent";
 
 // Hàm sort chung cho tất cả library items
 export function sortLibraryItems(items, sortType, priorityItem = null) {
-    const sorted = [...items];
+    let sorted = [...items];
 
+    // Apply search filter trước
+    const searchQuery = getCurrentSearchQuery();
+    if (searchQuery) {
+        sorted = filterItems(sorted, searchQuery);
+    }
+
+    // Sau đó mới sort
     if (sortType === "alphabetical") {
         sorted.sort((a, b) => {
-            // Item ưu tiên luôn ở đầu (ví dụ: Liked Songs)
             if (priorityItem) {
                 if (a.name === priorityItem || a.title === priorityItem) return -1;
                 if (b.name === priorityItem || b.title === priorityItem) return 1;
             }
 
-            // So sánh theo tên/title
             const nameA = a.name || a.title || "";
             const nameB = b.name || b.title || "";
             return nameA.localeCompare(nameB, 'vi', { sensitivity: 'base' });
         });
     } else {
-        // Gần đây - giữ thứ tự mặc định
         sorted.sort((a, b) => {
             if (priorityItem) {
                 if (a.name === priorityItem || a.title === priorityItem) return -1;
